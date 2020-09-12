@@ -20,14 +20,8 @@ class UserRepository extends ServiceEntityRepository
         $this->manager = $manager;
     }
 
-    public function saveUser(UserDTO $userDTO): void
+    public function saveUser(User $user): void
     {
-        $user = new User();
-        $user->setName($userDTO->name);
-        $user->setEmail($userDTO->email);
-        $user->setPassword($userDTO->password);
-        $user->setRegistered(new DateTime());
-
         $this->manager->persist($user);
         $this->manager->flush();
     }

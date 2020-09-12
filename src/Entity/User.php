@@ -102,9 +102,10 @@ class User
      * @param string $plainPassword
      * @return User
      */
-    public function setPassword(callable $encoder, string $plainPassword): self
-    {
-        $this->password = (string)$encoder($plainPassword);
+    public function setPassword( string $plainPassword): self
+    {//callable $encoder,
+        //$this->password = (string)$encoder($plainPassword);
+        $this->password = $plainPassword;
         return $this;
     }
 

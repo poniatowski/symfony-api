@@ -5,7 +5,6 @@ namespace App\Validator\Constraints;
 
 use App\Entity\Interfaces\UserInterface;
 use App\Repository\UserRepository;
-use Doctrine\ORM\NonUniqueResultException;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
