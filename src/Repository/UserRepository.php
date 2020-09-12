@@ -26,8 +26,7 @@ class UserRepository extends ServiceEntityRepository
         $user->setName($userDTO->name);
         $user->setEmail($userDTO->email);
         $user->setPassword($userDTO->password);
-        $this->setRegistered(new DateTime());
-
+        $user->setRegistered(new DateTime());
 
         $this->manager->persist($user);
         $this->manager->flush();

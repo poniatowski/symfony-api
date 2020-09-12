@@ -6,9 +6,6 @@ namespace App\DTO;
 use App\Validator\Constraints as AppAssert;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @AppAssert\UniqueEmail()
- */
 class User
 {
 
@@ -26,6 +23,7 @@ class User
 
     /**
      * @Assert\Email
+     * @AppAssert\UniqueEmail()
      */
     public $email;
 

@@ -17,7 +17,7 @@ class User
      * @ORM\GeneratedValue(strategy="IDENTITY")
      * @ORM\Column(type="integer", nullable=false)
      */
-    protected int $id;
+    protected ?int $id;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -48,4 +48,108 @@ class User
      * @ORM\Column(type="datetime", nullable=true)
      */
     protected DateTimeInterface $removed;
+
+    /**
+     * @return int
+     */
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param string $name
+     */
+    public function setName(string $name): void
+    {
+        $this->name = $name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEmail(): string
+    {
+        return $this->email;
+    }
+
+    /**
+     * @param string $email
+     */
+    public function setEmail(string $email): void
+    {
+        $this->email = $email;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPassword(): string
+    {
+        return $this->password;
+    }
+
+    /**
+     * @param string $password
+     */
+    public function setPassword(string $password): void
+    {
+        $this->password = $password;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isBlocked(): bool
+    {
+        return $this->blocked;
+    }
+
+    /**
+     * @param bool $blocked
+     */
+    public function setBlocked(bool $blocked): void
+    {
+        $this->blocked = $blocked;
+    }
+
+    /**
+     * @return DateTimeInterface
+     */
+    public function getRegistered(): DateTimeInterface
+    {
+        return $this->registered;
+    }
+
+    /**
+     * @param DateTimeInterface $registered
+     */
+    public function setRegistered(DateTimeInterface $registered): void
+    {
+        $this->registered = $registered;
+    }
+
+    /**
+     * @return DateTimeInterface
+     */
+    public function getRemoved(): DateTimeInterface
+    {
+        return $this->removed;
+    }
+
+    /**
+     * @param DateTimeInterface $removed
+     */
+    public function setRemoved(DateTimeInterface $removed): void
+    {
+        $this->removed = $removed;
+    }
 }
