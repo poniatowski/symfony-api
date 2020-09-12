@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Entity\User;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,38 +22,19 @@ class RegisterUserController extends AbstractController
      * @Route("/api/v1/register/user", name="register_user", methods={"POST"})
      */
     public function register(
-        Request $request,
-        ValidatorInterface $validator
-    ): Response
+        Request $request): Response
     {
-        $user = new User();
-        $request = $this->transformJsonBody($request);
+        $data = json_decode($request->getContent(), true);
 
-        $name = $request->get('name');
+        $name     = $data['name'];
+        $email    = $data['email'];
+        $password = $data['password'];
 
-        $this->userRepository->saveUser();
-
-        $errors = $validator->validate($user);
-        if (count($errors) > 0) {
-            return new Response((string) $errors, 400);
-        }
+        $this->userRepository->saveUser($name, $email, $password);
 
         return $this->json([
             'message' => 'Welcome to your new controller!',
             'path' => 'src/Controller/RegisterUserController.php',
         ]);
-    }
-
-    protected function transformJsonBody(Request $request)
-    {
-        $data = json_decode($request->getContent(), true);
-
-        if ($data === null) {
-            return $request;
-        }
-
-        $request->request->replace($data);
-
-        return $request;
     }
 }

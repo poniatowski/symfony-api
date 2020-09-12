@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use DateTime;
 use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -13,6 +14,11 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class User
 {
+    public function __construct()
+    {
+        $this->setRegistered(new DateTime());
+    }
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
