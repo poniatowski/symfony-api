@@ -3,7 +3,9 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
@@ -16,37 +18,39 @@ class User
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private int $id;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     * 
+     * @Assert\NotBlank
+     */
+    private string $name;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $name;
+    private string $email;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $email;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $password;
+    private string $password;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
      */
-    private $blocked;
+    private boolean $blocked;
 
     /**
      * @ORM\Column(type="datetime")
      */
-    private $registred;
+    private DateTimeInterface $registered;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
      */
-    private $removed;
+    private DateTimeInterface $removed;
 
     public function getId(): ?int
     {
@@ -101,24 +105,24 @@ class User
         return $this;
     }
 
-    public function getRegistred(): ?\DateTimeInterface
+    public function getRegistered(): ?DateTimeInterface
     {
-        return $this->registred;
+        return $this->registered;
     }
 
-    public function setRegistred(\DateTimeInterface $registred): self
+    public function setRegistered(DateTimeInterface $registered): self
     {
-        $this->registred = $registred;
+        $this->registered = $registered;
 
         return $this;
     }
 
-    public function getRemoved(): ?\DateTimeInterface
+    public function getRemoved(): ?DateTimeInterface
     {
         return $this->removed;
     }
 
-    public function setRemoved(?\DateTimeInterface $removed): self
+    public function setRemoved(?DateTimeInterface $removed): self
     {
         $this->removed = $removed;
 
