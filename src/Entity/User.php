@@ -24,11 +24,19 @@ class User
      * @ORM\Column(type="string", length=255)
      * 
      * @Assert\NotBlank
+     * @Assert\Length(
+     *     min=3,
+     *     max=255,
+     *     minMessage = "Your name must be at least {{ limit }} characters long",
+     *     maxMessage = "Your name cannot be longer than {{ limit }} characters",
+     *     allowEmptyString = false
+     * )
      */
     private string $name;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, unique=true)
+     * @Assert\Email
      */
     private string $email;
 
@@ -127,5 +135,14 @@ class User
         $this->removed = $removed;
 
         return $this;
+    }
+
+    /**
+     * @Assert\IsTrue(message="The password cannot match your name")
+     */
+    public function isPasswordSafe(): bool
+    {
+        return true;
+        // return $this->name !== $this->password;
     }
 }

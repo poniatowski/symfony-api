@@ -11,7 +11,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class RegisterUserController extends AbstractController
 {
     /**
-     * @Route("/register/user", name="register_user", methods={"GET"})
+     * @Route("/register/user", name="register_user", methods={"POST"})
      */
     public function register(ValidatorInterface $validator): Response
     {
