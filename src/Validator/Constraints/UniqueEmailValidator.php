@@ -8,7 +8,6 @@ use App\Repository\UserRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
-use Symfony\Component\Validator\Exception\UnexpectedValueException;
 
 class UniqueEmailValidator extends ConstraintValidator
 {
@@ -19,18 +18,14 @@ class UniqueEmailValidator extends ConstraintValidator
         $this->repository = $repository;
     }
 
-    public function validate($value, Constraint $constraint): void
+    public function validate($email, Constraint $constraint): void
     {
-        if (!is_string($value)) {
-            throw new UnexpectedValueException($value, 'string');
-        }
+        $t = $this->repository->findByEmailAddress($email);
 
-        $t = $this->repository->findByEmailAddress($value->getEmail(), $value->getId());
-
-        if (!$this->repository->findByEmailAddress($value->getEmail(), $value->getId())) {
+        if (!$this->repository->findByEmailAddress($email)) {
             $this->context
-                ->buildViolation(UniqueEmail::MESSAGE)
-                ->setCode(UniqueEmail::IS_UNIQUE_EMAIL_ERROR)
+                ->buildViolation($constraint->message)
+                ->setParameter('{{ string }}', $email)
                 ->addViolation();
         }
     }

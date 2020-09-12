@@ -7,7 +7,7 @@ use App\Validator\Constraints as AppAssert;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @AppAssert\UniqueEmail
+ * @AppAssert\UniqueEmail()
  */
 class User
 {
