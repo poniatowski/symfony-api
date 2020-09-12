@@ -3,6 +3,8 @@
 namespace App\Repository;
 
 use App\Entity\User;
+use App\DTO\User as UserDTO;
+use DateTIme;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityManagerInterface;
@@ -18,14 +20,25 @@ class UserRepository extends ServiceEntityRepository
         $this->manager = $manager;
     }
 
-    public function saveUser(string $name, string $email, string $password): void
+    public function saveUser(UserDTO $userDTO): void
     {
         $user = new User();
-        $user->setName($name);
-        $user->setEmail($email);
-        $user->setPassword($password);
+        $user->setName($userDTO->name);
+        $user->setEmail($userDTO->email);
+        $user->setPassword($userDTO->password);
+        $this->setRegistered(new DateTime());
+
 
         $this->manager->persist($user);
         $this->manager->flush();
+    }
+
+    public function findByEmailAddress(string $email): ?User
+    {
+        return $this->createQueryBuilder('u')
+            ->andWhere('u.email = :val')
+            ->setParameter('val', $email)
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 }

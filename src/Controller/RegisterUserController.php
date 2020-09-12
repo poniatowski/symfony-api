@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\DTO\User as UserDTO;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,15 +23,28 @@ class RegisterUserController extends AbstractController
     /**
      * @Route("/api/v1/register/user", name="register_user", methods={"POST"})
      */
-    public function register(Request $request): JsonResponse
+    public function register(
+        Request $request,
+        ValidatorInterface $validator
+    ): Response
     {
         $data = json_decode($request->getContent(), true);
 
-        $name     = $data['name'];
-        $email    = $data['email'];
-        $password = $data['password'];
+        $user = new UserDTO();
+        $user->name     = $data['name'] ?? null;
+        $user->email    = $data['email'] ?? null;
+        $user->password = $data['password'] ?? null;
 
-        $this->userRepository->saveUser($name, $email, $password);
+        $violations = $validator->validate($user);
+        if (count($violations) > 0) {
+            $errors = [];
+            foreach ($violations as $violation) {
+                $errors[$violation->getPropertyPath()] = $violation->getMessage();
+            }
+            return new JsonResponse(['error' => $errors], Response::HTTP_BAD_REQUEST);
+        }
+
+        $this->userRepository->saveUser($user);
 
         return new JsonResponse(['status' => 'User registered!'], Response::HTTP_CREATED);
     }
