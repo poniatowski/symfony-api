@@ -17,42 +17,42 @@ class User
      * @ORM\GeneratedValue(strategy="IDENTITY")
      * @ORM\Column(type="integer", nullable=false)
      */
-    protected ?int $id;
+    private int $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    protected string $name;
+    private string $name;
 
     /**
      * @ORM\Column(type="string", length=255, unique=true)
      */
-    protected string $email;
+    private string $email;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    protected string $password;
+    private string $password;
 
     /**
      * @ORM\Column(type="boolean", options={"default" : false})
      */
-    protected bool $blocked = false;
+    private bool $blocked = false;
 
     /**
      * @ORM\Column(type="datetime", options={"default": "CURRENT_TIMESTAMP"})
      */
-    protected DateTimeInterface $registered;
+    private DateTimeInterface $registered;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
      */
-    protected DateTimeInterface $removed;
+    private DateTimeInterface $removed;
 
     /**
      * @return int
      */
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }
