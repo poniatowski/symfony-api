@@ -6,31 +6,40 @@ use App\DTO\User as UserDTO;
 use App\Entity\User;
 use App\Repository\UserRepository;
 use DateTime;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class RegisterUserHandler
 {
     private UserRepository $userRepository;
 
-    public function __construct(UserRepository $userRepository)
+    private UserPasswordEncoderInterface $passwordEncoder;
+
+    public function __construct(
+        UserRepository $userRepository,
+        UserPasswordEncoderInterface $passwordEncoder
+    )
     {
-        $this->userRepository = $userRepository;
+        $this->userRepository  = $userRepository;
+        $this->passwordEncoder = $passwordEncoder;
     }
 
     public function createUserFromUserDto(UserDTO $userDTO): User
     {
         $user = new User();
-        $user->setName($userDTO->name);
         $user->setEmail($userDTO->email);
-        $user->setPassword($userDTO->password);
+        $user->setPassword($this->passwordEncoder->encodePassword(
+            $user,
+            $userDTO->password
+        ));
         $user->setRegistered(new DateTime());
 
         return $user;
     }
 
-    public function saveUser(UserDTO $userDTO): void
+    public function saveUser(UserDTO $userDTO): User
     {
         $user = $this->createUserFromUserDto($userDTO);
 
-        $this->userRepository->saveUser($user);
+        return $this->userRepository->saveUser($user);
     }
 }

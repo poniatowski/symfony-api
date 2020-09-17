@@ -11,6 +11,10 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
+
+use App\Security\TokenAuthenticator;
+use Symfony\Component\Security\Guard\GuardAuthenticatorHandler;
+
 class RegisterUserController extends AbstractController
 {
     private RegisterUserHandler $registerUserHandler;
@@ -23,26 +27,63 @@ class RegisterUserController extends AbstractController
     /**
      * @Route("/api/v1/register/user", name="register_user", methods={"POST"})
      */
-    public function register(Request $request, ValidatorInterface $validator): Response
+    public function register(
+        TokenAuthenticator $authenticator,
+        GuardAuthenticatorHandler $guardHandler,
+        Request $request,
+        ValidatorInterface $validator
+    ): Response
     {
         $data = json_decode($request->getContent(), true);
 
-        $user = new UserDTO();
-        $user->name     = $data['name'] ?? null;
-        $user->email    = $data['email'] ?? null;
-        $user->password = $data['password'] ?? null;
+        $userDTO = new UserDTO();
+        $userDTO->email       = $data['email'] ?? null;
+        $userDTO->password    = $data['password'] ?? null;
+        $userDTO->passwordConfirmation = $data['passwordConfirmation'] ?? null;
 
-        $violations = $validator->validate($user);
+        $errors = [];
+        if($userDTO->password !== $userDTO->passwordConfirmation)
+        {
+            $errors[] = "Password does not match the password confirmation.";
+        }
+        if(strlen($userDTO->password) < 6)
+        {
+            $errors[] = "Password should be at least 6 characters.";
+        }
+
+        $violations = $validator->validate($userDTO);
         if (count($violations) > 0) {
-            $errors = [];
             foreach ($violations as $violation) {
                 $errors[$violation->getPropertyPath()] = $violation->getMessage();
             }
             return new JsonResponse(['error' => $errors], Response::HTTP_BAD_REQUEST);
         }
 
-        $this->registerUserHandler->saveUser($user);
+        $user = $this->registerUserHandler->saveUser($userDTO);
+
+        $t = $guardHandler->authenticateUserAndHandleSuccess(
+            $user,
+            $request,
+            $authenticator, // authenticator whose onAuthenticationSuccess you want to use
+            'main'
+        );
 
         return new JsonResponse(['status' => 'User registered!'], Response::HTTP_CREATED);
+    }
+
+    /**
+     * @Route("/api/v1/login", name="login", methods={"POST"})
+     */
+    public function login(): Response
+    {
+        return new JsonResponse('success', Response::HTTP_OK);
+    }
+
+    /**
+     * @Route("/api/v1/logout", name="logout", methods={"GET"})
+     */
+    public function logout(): Response
+    {
+        return new JsonResponse('success', Response::HTTP_OK);
     }
 }
