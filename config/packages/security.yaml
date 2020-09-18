@@ -18,12 +18,11 @@ security:
             anonymous: true
             lazy: true
             logout:
-                path: /api/v1/app_logout
-
+                path: app_logout
+                target: /logout_message
             guard:
                 authenticators:
                     - App\Security\TokenAuthenticator
-
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#firewalls-authentication
 
@@ -35,4 +34,4 @@ security:
     access_control:
         # - { path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }
-    enable_authenticator_manager: false
+

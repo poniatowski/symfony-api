@@ -14,14 +14,17 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 use App\Security\TokenAuthenticator;
 use Symfony\Component\Security\Guard\GuardAuthenticatorHandler;
+use Symfony\Component\Security\Core\Security;
 
 class RegisterUserController extends AbstractController
 {
     private RegisterUserHandler $registerUserHandler;
+    private $security;
 
-    public function __construct(RegisterUserHandler $registerUserHandler)
+    public function __construct(RegisterUserHandler $registerUserHandler, Security $security)
     {
         $this->registerUserHandler = $registerUserHandler;
+        $this->security = $security;
     }
 
     /**
@@ -37,8 +40,8 @@ class RegisterUserController extends AbstractController
         $data = json_decode($request->getContent(), true);
 
         $userDTO = new UserDTO();
-        $userDTO->email       = $data['email'] ?? null;
-        $userDTO->password    = $data['password'] ?? null;
+        $userDTO->email                = $data['email'] ?? null;
+        $userDTO->password             = $data['password'] ?? null;
         $userDTO->passwordConfirmation = $data['passwordConfirmation'] ?? null;
 
         $errors = [];
@@ -64,7 +67,7 @@ class RegisterUserController extends AbstractController
         $t = $guardHandler->authenticateUserAndHandleSuccess(
             $user,
             $request,
-            $authenticator, // authenticator whose onAuthenticationSuccess you want to use
+            $authenticator,
             'main'
         );
 
@@ -75,14 +78,6 @@ class RegisterUserController extends AbstractController
      * @Route("/api/v1/login", name="login", methods={"POST"})
      */
     public function login(): Response
-    {
-        return new JsonResponse('success', Response::HTTP_OK);
-    }
-
-    /**
-     * @Route("/api/v1/logout", name="logout", methods={"GET"})
-     */
-    public function logout(): Response
     {
         return new JsonResponse('success', Response::HTTP_OK);
     }

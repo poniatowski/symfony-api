@@ -77,6 +77,9 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)
     {
+
+        // return $this->credentialResponseBuilderService->createCredentialResponse($token->getUser());
+
         // on success, let the request continue
         return null;
     }

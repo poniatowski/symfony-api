@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\DTO\User as UserDTO;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -24,6 +25,8 @@ class UserDetailsController extends AbstractController
 
     /**
      * @Route("/api/v1/user/extra_details", name="add_extra_details", methods={"PATCH"})
+     *
+     * @IsGranted("ROLE_USER")
      */
     public function addExtraDetails(Request $request): Response
     {

@@ -32,6 +32,7 @@ class RegisterUserHandler
             $userDTO->password
         ));
         $user->setRegistered(new DateTime());
+        $user->setRoles(['ROLE_USER']);
 
         return $user;
     }
