@@ -46,7 +46,7 @@ class RegisterUserController extends AbstractController
         }
 
         $violations = $validator->validate($userDTO);
-        if (count($violations) > 0) {
+        if ($violations->count() > 0) {
             foreach ($violations as $violation) {
                 $errors[$violation->getPropertyPath()] = $violation->getMessage();
             }

@@ -43,18 +43,22 @@ class UserDetailsController extends AbstractController
 
         $validator = Validation::createValidator();
         $constraint = new Assert\Collection(array(
-            'firstname' => new Assert\Length(array('min' => 1, 'max' => 255)),
-            'surname' => new Assert\Length(array('min' => 1, 'max' => 255)),
+            'firstname' => new Assert\Length(array('min' => 3, 'max' => 255)),
+            'surname' => new Assert\Length(array('min' => 3, 'max' => 255)),
         ));
         $violations = $validator->validate($data, $constraint);
         if ($violations->count() > 0) {
-            return new JsonResponse(["error" => (string)$violations], Response::HTTP_INTERNAL_SERVER_ERROR);
+            $errors = [];
+            foreach ($violations as $violation) {
+                $errors[$violation->getPropertyPath()] = $violation->getMessage();
+            }
+            return new JsonResponse(['error' => $errors], Response::HTTP_BAD_REQUEST);
         }
 
         try {
             $user = $this->security->getUser();
-            $user->setFirstName($data['firstname']);
-            $user->setSurname($data['surname']);
+            $user->setFirstName(ucwords($data['firstname']));
+            $user->setSurname(ucwords($data['surname']));
             $this->manager->persist($user);
             $this->manager->flush();
         } catch (Throwable $e) {
