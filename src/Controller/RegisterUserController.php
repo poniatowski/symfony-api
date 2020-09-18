@@ -35,18 +35,9 @@ class RegisterUserController extends AbstractController
         $userDTO->password             = $data['password'] ?? null;
         $userDTO->passwordConfirmation = $data['passwordConfirmation'] ?? null;
 
-        $errors = [];
-        if($userDTO->password !== $userDTO->passwordConfirmation)
-        {
-            $errors[] = "Password does not match the password confirmation.";
-        }
-        if(strlen($userDTO->password) < 6)
-        {
-            $errors[] = "Password should be at least 6 characters.";
-        }
-
         $violations = $validator->validate($userDTO);
         if ($violations->count() > 0) {
+            $errors = [];
             foreach ($violations as $violation) {
                 $errors[$violation->getPropertyPath()] = $violation->getMessage();
             }
