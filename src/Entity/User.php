@@ -42,7 +42,7 @@ class User implements UserInterface
 
     /**
      * @var string The hashed password
-     * @ORM\Column(type="string", length=20)
+     * @ORM\Column(type="string")
      */
     private $password;
 
@@ -65,6 +65,16 @@ class User implements UserInterface
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $apiToken;
+
+    /**
+     * @ORM\Column(type="string", length=50, nullable=true)
+     */
+    private $forgottenPasswordToken;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $sentForgottenPassword;
 
     public function getId(): ?int
     {
@@ -141,7 +151,7 @@ class User implements UserInterface
      */
     public function getPassword(): string
     {
-        return (string) $this->password;
+        return $this->password;
     }
 
     public function setPassword(string $password): self
@@ -224,6 +234,30 @@ class User implements UserInterface
     public function setApiToken(string $apiToken): self
     {
         $this->apiToken = $apiToken;
+
+        return $this;
+    }
+
+    public function getForgottenPasswordToken(): string
+    {
+        return $this->forgottenPasswordToken;
+    }
+
+    public function setForgottenPasswordToken(string $forgottenPasswordToken): self
+    {
+        $this->forgottenPasswordToken = $forgottenPasswordToken;
+
+        return $this;
+    }
+
+    public function getSentForgottenPassword(): string
+    {
+        return $this->sentForgottenPassword;
+    }
+
+    public function setSentForgottenPassword(string $sentForgottenPassword): self
+    {
+        $this->sentForgottenPassword = $sentForgottenPassword;
 
         return $this;
     }

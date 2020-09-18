@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Throwable;
 
 class RegisterUserController extends AbstractController
 {
@@ -44,7 +45,11 @@ class RegisterUserController extends AbstractController
             return new JsonResponse(['error' => $errors], Response::HTTP_BAD_REQUEST);
         }
 
-        $this->registerUserHandler->saveUser($userDTO);
+        try {
+            $this->registerUserHandler->saveUser($userDTO);
+        } catch (Throwable $e) {
+            return new JsonResponse(["error" => $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
 
         return new JsonResponse(['status' => 'User registered!'], Response::HTTP_CREATED);
     }
