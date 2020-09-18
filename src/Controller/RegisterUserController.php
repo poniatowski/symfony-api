@@ -11,33 +11,24 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-
-use App\Security\TokenAuthenticator;
-use Symfony\Component\Security\Guard\GuardAuthenticatorHandler;
-use Symfony\Component\Security\Core\Security;
-
 class RegisterUserController extends AbstractController
 {
     private RegisterUserHandler $registerUserHandler;
-    private $security;
 
-    public function __construct(RegisterUserHandler $registerUserHandler, Security $security)
+    public function __construct(RegisterUserHandler $registerUserHandler)
     {
         $this->registerUserHandler = $registerUserHandler;
-        $this->security = $security;
     }
 
     /**
      * @Route("/api/v1/register/user", name="register_user", methods={"POST"})
      */
-    public function register(
-        TokenAuthenticator $authenticator,
-        GuardAuthenticatorHandler $guardHandler,
-        Request $request,
-        ValidatorInterface $validator
-    ): Response
+    public function register(Request $request, ValidatorInterface $validator): Response
     {
-        $data = json_decode($request->getContent(), true);
+        $data = json_decode(
+            $request->getContent(),
+            true
+        );
 
         $userDTO = new UserDTO();
         $userDTO->email                = $data['email'] ?? null;
@@ -62,23 +53,8 @@ class RegisterUserController extends AbstractController
             return new JsonResponse(['error' => $errors], Response::HTTP_BAD_REQUEST);
         }
 
-        $user = $this->registerUserHandler->saveUser($userDTO);
-
-        $t = $guardHandler->authenticateUserAndHandleSuccess(
-            $user,
-            $request,
-            $authenticator,
-            'main'
-        );
+        $this->registerUserHandler->saveUser($userDTO);
 
         return new JsonResponse(['status' => 'User registered!'], Response::HTTP_CREATED);
-    }
-
-    /**
-     * @Route("/api/v1/login", name="login", methods={"POST"})
-     */
-    public function login(): Response
-    {
-        return new JsonResponse('success', Response::HTTP_OK);
     }
 }

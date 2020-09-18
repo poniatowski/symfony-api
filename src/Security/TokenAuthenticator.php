@@ -34,8 +34,6 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
     public function supports(Request $request): bool
     {
         return $request->getPathInfo() === '/api/v1/login' && $request->isMethod('POST');
-
-        return $request->headers->has('X-AUTH-TOKEN');
     }
 
     /**

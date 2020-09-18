@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\DTO\User as UserDTO;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,10 +18,16 @@ class UserDetailsController extends AbstractController
 {
     private Security $security;
 
-     public function __construct(Security $security)
-     {
-         $this->security = $security;
-     }
+    private EntityManagerInterface $manager;
+
+    public function __construct(
+        Security $security,
+        EntityManagerInterface $manager
+    )
+    {
+        $this->security = $security;
+        $this->manager  = $manager;
+    }
 
     /**
      * @Route("/api/v1/user/extra_details", name="add_extra_details", methods={"PATCH"})
@@ -30,12 +36,6 @@ class UserDetailsController extends AbstractController
      */
     public function addExtraDetails(Request $request): Response
     {
-        if ($this->security->getUser()) {
-            return false;
-        }
-
-        $t = $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-
         $data = json_decode(
             $request->getContent(),
             true
@@ -52,7 +52,11 @@ class UserDetailsController extends AbstractController
         }
 
         try {
-            // $userManager->updateUser($user, true);
+            $user = $this->security->getUser();
+            $user->setFirstName($data['firstname']);
+            $user->setSurname($data['surname']);
+            $this->manager->persist($user);
+            $this->manager->flush();
         } catch (Throwable $e) {
             return new JsonResponse(["error" => $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }

@@ -7,12 +7,12 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class ResetPasswordController extends AbstractController
+class LoginController extends AbstractController
 {
     /**
-     * @Route("/api/v1/forgotten_password", name="forgotten_password", methods={"GET"})
+     * @Route("/api/v1/login", name="login", methods={"POST"})
      */
-    public function forgottenPassword(): Response
+    public function login(): Response
     {
         return new JsonResponse('success', Response::HTTP_OK);
     }
