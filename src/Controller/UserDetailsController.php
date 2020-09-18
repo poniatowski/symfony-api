@@ -67,12 +67,4 @@ class UserDetailsController extends AbstractController
 
         return new JsonResponse('success', Response::HTTP_OK);
     }
-
-    /**
-     * @Route("/api/v1/user/close_account", name="close_account", methods={"PATCH"})
-     */
-    public function closeAccount(): Response
-    {
-        return new JsonResponse('success', Response::HTTP_OK);
-    }
 }
