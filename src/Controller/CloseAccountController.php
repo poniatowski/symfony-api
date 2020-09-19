@@ -2,8 +2,8 @@
 
 namespace App\Controller;
 
+use App\Repository\UserRepository;
 use DateTime;
-use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,12 +14,9 @@ class CloseAccountController
 {
     private Security $security;
 
-    private EntityManagerInterface $manager;
-
-    public function __construct(Security $security, EntityManagerInterface $manager)
+    public function __construct(Security $security)
     {
         $this->security = $security;
-        $this->manager  = $manager;
     }
 
     /**
@@ -27,14 +24,13 @@ class CloseAccountController
      *
      * @IsGranted("ROLE_USER")
      */
-    public function closeAccount(): Response
+    public function closeAccount(UserRepository $userRepository): Response
     {
         $user = $this->security->getUser();
 
         $user->setClosed(true);
         $user->setClosedDate(new DateTime());
-        $this->manager->persist($user);
-        $this->manager->flush();
+        $userRepository->saveUser($user);
 
         session_destroy();
 

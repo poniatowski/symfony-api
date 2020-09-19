@@ -94,8 +94,7 @@ class ForgottenPasswordController extends AbstractController
 
         $user->setForgottenPasswordToken($token);
         $user->setSentForgottenPassword(new DateTime());
-        $manager->persist($user);
-        $manager->flush();
+        $this->userRepository->saveUser($user);
 
         return new JsonResponse(
             [

@@ -255,7 +255,7 @@ class User implements UserInterface
         return $this->forgottenPasswordToken;
     }
 
-    public function setForgottenPasswordToken(string $forgottenPasswordToken): self
+    public function setForgottenPasswordToken(string $forgottenPasswordToken = null): self
     {
         $this->forgottenPasswordToken = $forgottenPasswordToken;
 
@@ -267,7 +267,7 @@ class User implements UserInterface
         return $this->sentForgottenPassword;
     }
 
-    public function setSentForgottenPassword(DateTimeInterface $sentForgottenPassword): self
+    public function setSentForgottenPassword(DateTimeInterface $sentForgottenPassword = null): self
     {
         $this->sentForgottenPassword = $sentForgottenPassword;
 

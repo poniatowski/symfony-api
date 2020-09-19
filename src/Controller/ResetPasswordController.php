@@ -17,7 +17,6 @@ class ResetPasswordController
 {
     /**
      * @Route("/api/v1/user/reset_password/{token}", name="reset_password", methods={"POST"})
-     *
      */
     public function closeAccount(
         string $token,
@@ -32,7 +31,7 @@ class ResetPasswordController
         if ($user === null) {
             return new JsonResponse(
                 [
-                    'error' => 'We can not find the user associated to that token.'
+                    'error' => 'The token has been expired.'
                 ],
                 Response::HTTP_BAD_REQUEST
             );
@@ -68,12 +67,15 @@ class ResetPasswordController
             return new JsonResponse(['error' => $errors], Response::HTTP_BAD_REQUEST);
         }
 
-
         $newEncodedPassword = $passwordEncoder->encodePassword(
             $user,
             $userDTO->password
         );
         $userRepository->upgradePassword($user, $newEncodedPassword);
+
+        $user->setForgottenPasswordToken(null);
+        $user->setSentForgottenPassword(null);
+        $userRepository->saveUser($user);
 
         return new JsonResponse(
             [
