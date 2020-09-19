@@ -58,6 +58,15 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->getOneOrNullResult();
     }
 
+    public function findByPasswordToken(string $token): ?User
+    {
+        return $this->createQueryBuilder('u')
+            ->andWhere('u.forgottenPasswordToken = :val')
+            ->setParameter('val', $token)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
     // /**
     //  * @return User[] Returns an array of User objects
     //  */

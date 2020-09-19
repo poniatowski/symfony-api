@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Repository\UserRepository;
+use DateTime;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
@@ -12,12 +14,13 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Validation;
+use Throwable;
 
 class ForgottenPasswordController extends AbstractController
 {
     private UserRepository $userRepository;
 
-    public function __construct(MailerInterface $mailer, UserRepository $userRepository)
+    public function __construct(UserRepository $userRepository)
     {
         $this->userRepository = $userRepository;
     }
@@ -25,7 +28,11 @@ class ForgottenPasswordController extends AbstractController
     /**
      * @Route("/api/v1/user/forgotten_password", name="forgotten_password", methods={"GET"})
      */
-    public function forgottenPassword(Request $request, MailerInterface $mailer): Response
+    public function forgottenPassword(
+        Request $request,
+        MailerInterface $mailer,
+        EntityManagerInterface $manager
+    ): Response
     {
         $data = json_decode(
             $request->getContent(),
@@ -56,17 +63,30 @@ class ForgottenPasswordController extends AbstractController
             );
         }
 
-        $domain = $_SERVER['DOMAIN'];
+        $domain          = $_SERVER['DOMAIN'];
+        $token           = $this->generatePasswordToken();
+        $resetPasswordURL= sprintf(
+            '<a href="%s/api/v1/user/reset_password/%s">restart password</a>',
+            $domain,
+            $token
+        );
 
         $email = (new Email())
             ->from('hello@example.com')
             ->to($user->getEmail())
             ->priority(Email::PRIORITY_HIGH)
             ->subject('Forgotten password!')
-            ->html('<p>Click link to <a href="' . $domain . '/api/v1/user/reset_password">restart password</a>.</p>');
+            ->html('<p>Click link to '. $resetPasswordURL .'.</p>');
 
-        $mailer->send($email);
+        try {
+            $mailer->send($email);
+        } catch (Throwable $e) {
+        }
 
+        $user->setForgottenPasswordToken($token);
+        $user->setSentForgottenPassword(new DateTime());
+        $manager->persist($user);
+        $manager->flush();
 
         return new JsonResponse(
             [
@@ -74,5 +94,10 @@ class ForgottenPasswordController extends AbstractController
             ],
             Response::HTTP_OK
         );
+    }
+
+    private function generatePasswordToken(): string
+    {
+        return bin2hex(random_bytes(20));
     }
 }

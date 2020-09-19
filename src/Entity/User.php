@@ -255,12 +255,12 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getSentForgottenPassword(): string
+    public function getSentForgottenPassword(): DateTimeInterface
     {
         return $this->sentForgottenPassword;
     }
 
-    public function setSentForgottenPassword(string $sentForgottenPassword): self
+    public function setSentForgottenPassword(DateTimeInterface $sentForgottenPassword): self
     {
         $this->sentForgottenPassword = $sentForgottenPassword;
 
