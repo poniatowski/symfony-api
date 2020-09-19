@@ -4,6 +4,8 @@ namespace App\Controller;
 
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,7 +17,7 @@ class ForgottenPasswordController extends AbstractController
 {
     private UserRepository $userRepository;
 
-    public function __construct(UserRepository $userRepository)
+    public function __construct(MailerInterface $mailer, UserRepository $userRepository)
     {
         $this->userRepository = $userRepository;
     }
@@ -23,7 +25,7 @@ class ForgottenPasswordController extends AbstractController
     /**
      * @Route("/api/v1/user/forgotten_password", name="forgotten_password", methods={"GET"})
      */
-    public function forgottenPassword(Request $request): Response
+    public function forgottenPassword(Request $request, MailerInterface $mailer): Response
     {
         $data = json_decode(
             $request->getContent(),
@@ -54,8 +56,17 @@ class ForgottenPasswordController extends AbstractController
             );
         }
 
-        // TODO - token and email
-        
+        $domain = $_SERVER['DOMAIN'];
+
+        $email = (new Email())
+            ->from('hello@example.com')
+            ->to($user->getEmail())
+            ->priority(Email::PRIORITY_HIGH)
+            ->subject('Forgotten password!')
+            ->html('<p>Click link to <a href="' . $domain . '/api/v1/user/reset_password">restart password</a>.</p>');
+
+        $mailer->send($email);
+
 
         return new JsonResponse(
             [
