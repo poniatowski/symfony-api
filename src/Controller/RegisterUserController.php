@@ -48,7 +48,12 @@ class RegisterUserController extends AbstractController
         try {
             $this->registerUserHandler->saveUser($userDTO);
         } catch (Throwable $e) {
-            return new JsonResponse(["error" => $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
+            return new JsonResponse(
+                [
+                    'error' => 'Unable to register user. Please, try again.'
+                ],
+                Response::HTTP_INTERNAL_SERVER_ERROR
+            );
         }
 
         return new JsonResponse(['status' => 'User registered!'], Response::HTTP_CREATED);

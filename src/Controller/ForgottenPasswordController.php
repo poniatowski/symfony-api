@@ -54,6 +54,9 @@ class ForgottenPasswordController extends AbstractController
             );
         }
 
+        // TODO - token and email
+        
+
         return new JsonResponse(
             [
                 'success' => 'Email has been successfully sent to you email address'

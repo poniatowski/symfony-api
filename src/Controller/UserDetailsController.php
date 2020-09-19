@@ -62,9 +62,14 @@ class UserDetailsController extends AbstractController
             $this->manager->persist($user);
             $this->manager->flush();
         } catch (Throwable $e) {
-            return new JsonResponse(["error" => $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
+            return new JsonResponse(['error' => $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
-        return new JsonResponse('success', Response::HTTP_OK);
+        return new JsonResponse(
+            [
+                'success' => 'User details successfully added.'
+            ],
+            Response::HTTP_OK
+        );
     }
 }

@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
+use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
@@ -65,6 +66,12 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
 
     public function checkCredentials($credentials, UserInterface $user)
     {
+        if ($user->isClosed()) {
+            throw new CustomUserMessageAuthenticationException(
+                'Your account has been closed.'
+            );
+        }
+
         $password = $credentials["password"];
         if ($this->passwordEncoder->isPasswordValid($user, $password)){
             return true;
@@ -75,7 +82,6 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)
     {
-
         // return $this->credentialResponseBuilderService->createCredentialResponse($token->getUser());
 
         // on success, let the request continue

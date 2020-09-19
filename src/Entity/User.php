@@ -49,7 +49,12 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="boolean", options={"default" : false})
      */
-    private bool $blocked = false;
+    private bool $closed = false;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private DateTimeInterface $closedDate;
 
     /**
      * @ORM\Column(type="datetime", options={"default": "CURRENT_TIMESTAMP"})
@@ -81,7 +86,7 @@ class User implements UserInterface
         return $this->id;
     }
 
-    public function getEmail(): ?string
+    public function getEmail(): string
     {
         return $this->email;
     }
@@ -103,7 +108,7 @@ class User implements UserInterface
         return (string) $this->email;
     }
 
-    public function getFirstName(): string
+    public function getFirstName(): ?string
     {
         return $this->firstName;
     }
@@ -115,7 +120,7 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getSurname(): string
+    public function getSurname(): ?string
     {
         return $this->surname;
     }
@@ -178,52 +183,52 @@ class User implements UserInterface
         // $this->plainPassword = null;
     }
 
-    /**
-     * @return bool
-     */
-    public function isBlocked(): bool
+    public function isClosed(): bool
     {
-        return $this->blocked;
+        return $this->closed;
     }
 
-    /**
-     * @param bool $blocked
-     */
-    public function setBlocked(bool $blocked): void
+    public function setClosed(bool $closed): self
     {
-        $this->blocked = $blocked;
+        $this->closed = $closed;
+
+        return $this;
     }
 
-    /**
-     * @return DateTimeInterface
-     */
+    public function getClosedDate(): DateTimeInterface
+    {
+        return $this->closedDate;
+    }
+
+    public function setClosedDate(DateTimeInterface $closedDate): self
+    {
+        $this->closedDate = $closedDate;
+
+        return $this;
+    }
+
     public function getRegistered(): DateTimeInterface
     {
         return $this->registered;
     }
 
-    /**
-     * @param DateTimeInterface $registered
-     */
-    public function setRegistered(DateTimeInterface $registered): void
+    public function setRegistered(DateTimeInterface $registered): self
     {
         $this->registered = $registered;
+
+        return $this;
     }
 
-    /**
-     * @return DateTimeInterface
-     */
     public function getRemoved(): DateTimeInterface
     {
         return $this->removed;
     }
 
-    /**
-     * @param DateTimeInterface $removed
-     */
-    public function setRemoved(DateTimeInterface $removed): void
+    public function setRemoved(DateTimeInterface $removed): self
     {
         $this->removed = $removed;
+
+        return  $this;
     }
 
     public function getApiToken(): ?string
@@ -238,7 +243,7 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getForgottenPasswordToken(): string
+    public function getForgottenPasswordToken(): ?string
     {
         return $this->forgottenPasswordToken;
     }

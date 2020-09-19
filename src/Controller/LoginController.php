@@ -14,6 +14,6 @@ class LoginController extends AbstractController
      */
     public function login(): Response
     {
-        return new JsonResponse('success', Response::HTTP_OK);
+        return new JsonResponse(null, Response::HTTP_NO_CONTENT);
     }
 }
