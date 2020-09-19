@@ -1,8 +1,7 @@
-<?php
+<?php declare(strict_types = 1);
 
 namespace App\Security;
 
-use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -34,19 +33,19 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
      */
     public function supports(Request $request): bool
     {
-        return $request->getPathInfo() === '/api/v1/login' && $request->isMethod('POST');
+        return ($request->getPathInfo() === '/api/v1/login' && $request->isMethod('POST'));
     }
 
     /**
      * Called on every request. Return whatever credentials you want to
      * be passed to getUser() as $credentials.
      */
-    public function getCredentials(Request $request)
+    public function getCredentials(Request $request): ?array
     {
         return json_decode($request->getContent(), true);
     }
 
-    public function getUser($credentials, UserProviderInterface $userProvider)
+    public function getUser($credentials, UserProviderInterface $userProvider): ?UserInterface
     {
         if (null === $credentials) {
             // The token header was empty, authentication fails with HTTP Status
@@ -54,17 +53,10 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
             return null;
         }
 
-        $user = $userProvider->loadUserByUsername($credentials['email']);
-
-        return $user;
-
-        // if a User is returned, checkCredentials() is called
-        return $this->em->getRepository(User::class)
-            ->findOneBy(['apiToken' => $credentials])
-            ;
+        return $userProvider->loadUserByUsername($credentials['email']);
     }
 
-    public function checkCredentials($credentials, UserInterface $user)
+    public function checkCredentials($credentials, UserInterface $user): bool
     {
         if ($user->isClosed()) {
             throw new CustomUserMessageAuthenticationException(
@@ -80,7 +72,7 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
         return false;
     }
 
-    public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)
+    public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey): ?Request
     {
         // return $this->credentialResponseBuilderService->createCredentialResponse($token->getUser());
 
@@ -88,7 +80,7 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
         return null;
     }
 
-    public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
+    public function onAuthenticationFailure(Request $request, AuthenticationException $exception): JsonResponse
     {
         $data = [
             // you may want to customize or obfuscate the message first
@@ -104,7 +96,7 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
     /**
      * Called when authentication is needed, but it's not sent
      */
-    public function start(Request $request, AuthenticationException $authException = null)
+    public function start(Request $request, AuthenticationException $authException = null): JsonResponse
     {
         $data = [
             'message' => 'Authentication Required'
@@ -113,7 +105,7 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
         return new JsonResponse($data, Response::HTTP_UNAUTHORIZED);
     }
 
-    public function supportsRememberMe()
+    public function supportsRememberMe(): bool
     {
         return false;
     }

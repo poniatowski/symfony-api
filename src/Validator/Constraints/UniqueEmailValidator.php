@@ -1,9 +1,7 @@
-<?php
-declare(strict_types = 1);
+<?php declare(strict_types = 1);
 
 namespace App\Validator\Constraints;
 
-use App\Entity\Interfaces\UserInterface;
 use App\Repository\UserRepository;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
@@ -19,7 +17,8 @@ class UniqueEmailValidator extends ConstraintValidator
 
     public function validate($email, Constraint $constraint): void
     {
-        if ($this->repository->findByEmailAddress($email) !== null) {
+        if ($this->repository->findByEmailAddress($email) !== null)
+        {
             $this->context
                 ->buildViolation($constraint->message)
                 ->setParameter('{{ string }}', $email)

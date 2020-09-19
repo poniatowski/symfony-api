@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 namespace App\Controller;
 
@@ -58,6 +58,15 @@ class ForgottenPasswordController extends AbstractController
             return new JsonResponse(
                 [
                     'error' => sprintf('The email address (%s) has not been recognised.', $data['email'])
+                ],
+                Response::HTTP_BAD_REQUEST
+            );
+        }
+
+        if ($user->isClosed()) {
+            return new JsonResponse(
+                [
+                    'error' => 'That account is closed.'
                 ],
                 Response::HTTP_BAD_REQUEST
             );

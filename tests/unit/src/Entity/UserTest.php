@@ -41,18 +41,18 @@ class UserTest extends \Codeception\Test\Unit
         $user->setForgottenPasswordToken('FORGOTTEN-PASSWORD-TOKEN');
         $user->setSentForgottenPassword($sentForgottenPassword);
 
-        $this->assertEquals(99999, $user->getId());
-        $this->assertEquals('username@example.com', $user->getEmail());
-        $this->assertEquals('First name', $user->getFirstName());
-        $this->assertEquals('Surname', $user->getSurname());
-        $this->assertEquals(['ROLE_USER'], $user->getRoles());
-        $this->assertEquals('PASSWORD', $user->getPassword());
+        $this->assertSame(99999, $user->getId());
+        $this->assertSame('username@example.com', $user->getEmail());
+        $this->assertSame('First name', $user->getFirstName());
+        $this->assertSame('Surname', $user->getSurname());
+        $this->assertSame(['ROLE_USER'], $user->getRoles());
+        $this->assertSame('PASSWORD', $user->getPassword());
         $this->assertFalse(false, $user->isClosed());
-        $this->assertEquals($closedDate, $user->getClosedDate());
-        $this->assertEquals($registeredDate, $user->getRegistered());
-        $this->assertEquals($removedDate, $user->getRemoved());
-        $this->assertEquals('TOKEN', $user->getApiToken());
-        $this->assertEquals('FORGOTTEN-PASSWORD-TOKEN', $user->getForgottenPasswordToken());
-        $this->assertEquals($sentForgottenPassword, $user->getSentForgottenPassword());
+        $this->assertSame($closedDate, $user->getClosedDate());
+        $this->assertSame($registeredDate, $user->getRegistered());
+        $this->assertSame($removedDate, $user->getRemoved());
+        $this->assertSame('TOKEN', $user->getApiToken());
+        $this->assertSame('FORGOTTEN-PASSWORD-TOKEN', $user->getForgottenPasswordToken());
+        $this->assertSame($sentForgottenPassword, $user->getSentForgottenPassword());
     }
 }
