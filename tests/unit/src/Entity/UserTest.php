@@ -2,7 +2,6 @@
 
 use App\Entity\User;
 use DateTime;
-use DateInterval;
 
 class UserTest extends \Codeception\Test\Unit
 {
