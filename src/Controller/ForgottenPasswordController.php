@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Repository\UserRepository;
 use DateTime;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
@@ -30,20 +29,16 @@ class ForgottenPasswordController extends AbstractController
      */
     public function forgottenPassword(
         Request $request,
-        MailerInterface $mailer,
-        EntityManagerInterface $manager
+        MailerInterface $mailer
     ): Response
     {
-        $data = json_decode(
-            $request->getContent(),
-            true
-        );
+        $email = $request->query->get('email');
 
         $validator = Validation::createValidator();
         $constraint = new Assert\Collection(array(
             'email' => new Assert\Email(),
         ));
-        $violations = $validator->validate($data, $constraint);
+        $violations = $validator->validate(['email' => $email], $constraint);
         if ($violations->count() > 0) {
             $errors = [];
             foreach ($violations as $violation) {
@@ -52,12 +47,12 @@ class ForgottenPasswordController extends AbstractController
             return new JsonResponse(['error' => $errors], Response::HTTP_BAD_REQUEST);
         }
 
-        $user = $this->userRepository->findByEmailAddress($data['email']);
+        $user = $this->userRepository->findByEmailAddress($email);
 
         if ($user === null) {
             return new JsonResponse(
                 [
-                    'error' => sprintf('The email address (%s) has not been recognised.', $data['email'])
+                    'error' => sprintf('The email address (%s) has not been recognised.', $email)
                 ],
                 Response::HTTP_BAD_REQUEST
             );

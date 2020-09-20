@@ -10,4 +10,7 @@ modules:
               part: Json
         - Doctrine2:
               depends: Symfony
+             # cleanup: true
         - \App\Tests\Helper\Api
+        - Asserts
+        - \App\Tests\Helper\Unit

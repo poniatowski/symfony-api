@@ -12,6 +12,7 @@ class LogoutController extends AbstractController
 {
     /**
      * @Route("/api/v1/logout", name="app_logout", methods={"GET"})
+     *
      * @throws Exception
      */
     public function logout(): Response

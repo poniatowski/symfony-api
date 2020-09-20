@@ -31,7 +31,7 @@ class ResetPasswordController
         if ($user === null) {
             return new JsonResponse(
                 [
-                    'error' => 'The token has been expired.'
+                    'error' => 'The token has been already used.'
                 ],
                 Response::HTTP_BAD_REQUEST
             );

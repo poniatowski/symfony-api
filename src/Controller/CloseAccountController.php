@@ -4,13 +4,14 @@ namespace App\Controller;
 
 use App\Repository\UserRepository;
 use DateTime;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Security;
 
-class CloseAccountController
+class CloseAccountController extends AbstractController
 {
     private Security $security;
 
@@ -32,13 +33,6 @@ class CloseAccountController
         $user->setClosedDate(new DateTime());
         $userRepository->saveUser($user);
 
-        session_destroy();
-
-        return new JsonResponse(
-            [
-                'success' => 'Your account has been successfully closed'
-            ],
-            Response::HTTP_OK
-        );
+        return $this->redirect($this->generateUrl('app_logout'));
     }
 }
