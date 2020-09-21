@@ -11,6 +11,7 @@ services:
         - POSTGRES_USER=postgresql
         - POSTGRES_PASSWORD=postgresql
         - POSTGRES_DB=api
+        - COMPOSE_PROJECT_NAME=symfony-api
       ports:
         - "5432:5432"
 
@@ -20,6 +21,8 @@ services:
       depends_on:
         - postgres
         - php-fpm
+      environment:
+        - COMPOSE_PROJECT_NAME=symfony-api
       working_dir: /application
       volumes:
           - .:/application
@@ -31,6 +34,7 @@ services:
       build: phpdocker/php-fpm
       environment:
         - PHP_IDE_CONFIG=serverName=API
+        - COMPOSE_PROJECT_NAME=symfony-api
       container_name: api-php-fpm
       working_dir: /application
       volumes:
@@ -38,6 +42,8 @@ services:
         - ./phpdocker/php-fpm/php-ini-overrides.ini:/etc/php/7.4/fpm/conf.d/99-overrides.ini
 
     mailhog:
+      environment:
+        - COMPOSE_PROJECT_NAME=symfony-api
       container_name: api-mail
       image: mailhog/mailhog:latest
       restart: always
