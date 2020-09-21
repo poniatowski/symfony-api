@@ -68,6 +68,12 @@
     ],
     "post-update-cmd": [
       "@auto-scripts"
+    ],
+    "qa": [
+      "@tests"
+    ],
+    "tests": [
+      "./bin/console doctrine:migrations:migrate --no-interaction -e test"
     ]
   },
   "conflict": {
