@@ -18,13 +18,14 @@ services:
     container_name: api-test
     depends_on:
       - postgres
+    working_dir: /application
     environment:
-      - PHP_IDE_CONFIG=serverName=test.egc8
+      - PHP_IDE_CONFIG=serverName=test.api
     build:
       context: ./phpdocker/test
       dockerfile: Dockerfile
     volumes:
-      - .:/application:delegated
+      - .:/application
       - ./vendor:/application/vendor:cached
       - ./phpdocker/php-fpm/php-ini-overrides.ini:/etc/php/7.4/fpm/conf.d/99-overrides.ini
 
