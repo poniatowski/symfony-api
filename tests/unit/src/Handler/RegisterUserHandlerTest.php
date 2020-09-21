@@ -27,8 +27,8 @@ class RegisterUserHandlerTest extends Unit
         $userDTO->password             = 'Password098';
         $userDTO->passwordConfirmation = 'Password098';
 
-        $userRepository = new RegisterUserHandler($userRepository, $passwordEncoder);
-        $userRepository->createUserFromUserDto($userDTO);
+        $userHandler = new RegisterUserHandler($userRepository, $passwordEncoder);
+        $userHandler->createUserFromUserDto($userDTO);
     }
 
     public function testSaveUser(): void
@@ -53,8 +53,8 @@ class RegisterUserHandlerTest extends Unit
         $userDTO->email                = 'user@domain.co.uk';
         $userDTO->password             = 'Password098';
 
-        $userRepository = new RegisterUserHandler($userRepository, $passwordEncoder);
-        $newUser = $userRepository->saveUser($userDTO);
+        $userHandler = new RegisterUserHandler($userRepository, $passwordEncoder);
+        $newUser = $userHandler->saveUser($userDTO);
 
         $this->assertSame('hashed_password', $newUser->getPassword());
         $this->assertSame('user@domain.co.uk', $newUser->getEmail());
