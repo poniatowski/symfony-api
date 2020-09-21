@@ -16,3 +16,9 @@ Service|Address outside
 ------|---------
 Webserver|[localhost:8080](http://localhost:8080)
 Mailhog| [localhost:8025](http://localhost:8025) 
+
+
+# Docker-compose yml files #
+
+  * docker-compose.yml - Run to build your local environment with a local database and web server. `docker-compose up`
+  * docker-compose.test.yml - Use it to run all tests suites (unit, functional tests etc). `docker-compose -f docker-compose.test.yml up`
