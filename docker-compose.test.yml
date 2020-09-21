@@ -29,4 +29,4 @@ services:
     volumes:
       - .:/application:delegated
       - ./vendor:/application/vendor:cached
-      - ./phpdocker/php-fpm/php-ini-overrides.ini:/etc/php/7.4/fpm/conf.d/99-overrides.ini
+      - ./phpdocker/test/php-ini-overrides.ini:/etc/php/7.4/fpm/conf.d/99-overrides.ini

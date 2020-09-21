@@ -9,16 +9,8 @@ class UserTest extends \Codeception\Test\Unit
      * @var \App\Tests\UnitTester
      */
     protected $tester;
-    
-    protected function _before()
-    {
-    }
 
-    protected function _after()
-    {
-    }
-
-    public function testUserEntity()
+    public function testUserEntity(): void
     {
         $closedDate = new DateTime('2020-01-01');
         $registeredDate = new DateTime('2018-01-01');
