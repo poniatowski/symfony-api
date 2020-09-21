@@ -13,7 +13,7 @@ services:
       - POSTGRES_DB=api
     ports:
       - "5430:5432"
-
+    
   test:
     container_name: api-test
     depends_on:
@@ -25,7 +25,7 @@ services:
       context: ./phpdocker/test
       dockerfile: Dockerfile
     volumes:
-      - .:/application
+      - .:/application:delegated
       - ./vendor:/application/vendor:cached
       - ./phpdocker/php-fpm/php-ini-overrides.ini:/etc/php/7.4/fpm/conf.d/99-overrides.ini
 
