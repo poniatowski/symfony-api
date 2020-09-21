@@ -1,6 +1,9 @@
 actor: ApiTester
 modules:
     enabled:
+        - \App\Tests\Helper\Api
+        - Asserts
+        - \App\Tests\Helper\Unit
         - Symfony:
               app_path: 'src'
               environment: 'test'
@@ -10,7 +13,4 @@ modules:
               part: Json
         - Doctrine2:
               depends: Symfony
-             # cleanup: true
-        - \App\Tests\Helper\Api
-        - Asserts
-        - \App\Tests\Helper\Unit
+              cleanup: true

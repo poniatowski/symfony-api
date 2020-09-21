@@ -18,7 +18,6 @@ class UserTest extends \Codeception\Test\Unit
     {
     }
 
-    // tests
     public function testUserEntity()
     {
         $closedDate = new DateTime('2020-01-01');
@@ -47,7 +46,7 @@ class UserTest extends \Codeception\Test\Unit
         $this->assertSame('Surname', $user->getSurname());
         $this->assertSame(['ROLE_USER'], $user->getRoles());
         $this->assertSame('PASSWORD', $user->getPassword());
-        $this->assertFalse(false, $user->isClosed());
+        $this->assertFalse($user->isClosed());
         $this->assertSame($closedDate, $user->getClosedDate());
         $this->assertSame($registeredDate, $user->getRegistered());
         $this->assertSame($removedDate, $user->getRemoved());
