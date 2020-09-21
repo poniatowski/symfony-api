@@ -1,7 +1,7 @@
 version: "3.1"
 services:
 
-  postgres:
+  postgres-test:
     image: postgres:11.1-alpine
     container_name: api-postgres-test
     working_dir: /application
@@ -13,11 +13,11 @@ services:
       - POSTGRES_DB=api
     ports:
       - "5430:5432"
-    
+
   test:
     container_name: api-test
     depends_on:
-      - postgres
+      - postgres-test
     working_dir: /application
     environment:
       - PHP_IDE_CONFIG=serverName=test.api
@@ -28,5 +28,3 @@ services:
       - .:/application:delegated
       - ./vendor:/application/vendor:cached
       - ./phpdocker/php-fpm/php-ini-overrides.ini:/etc/php/7.4/fpm/conf.d/99-overrides.ini
-
-
