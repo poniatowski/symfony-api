@@ -11,6 +11,8 @@ modules:
         - Symfony:
             app_path: 'src'
             environment: 'test'
+            em_service: 'doctrine.orm.entity_manager'
+            mailer: 'symfony_mailer'
         - Doctrine2:
             depends: Symfony
             cleanup: true

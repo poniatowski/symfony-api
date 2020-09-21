@@ -28,6 +28,7 @@ class ForgottenPasswordCest
         $I->sendGET('/user/forgotten_password', [
             'email' => 'user@example.com',
         ]);
+        $I->seeEmailIsSent(1);
         $I->seeResponseCodeIs(\Codeception\Util\HttpCode::OK);
         $I->seeResponseIsJson();
         $I->seeResponseContains('{"success":"Email has been successfully sent to you email address"}');

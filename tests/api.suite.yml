@@ -4,6 +4,8 @@ modules:
         - Symfony:
               app_path: 'src'
               environment: 'test'
+              em_service: 'doctrine.orm.entity_manager'
+              mailer: 'symfony_mailer'
         - REST:
               url: /api/v1
               depends: Symfony
