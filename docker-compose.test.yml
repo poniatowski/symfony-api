@@ -24,9 +24,10 @@ services:
       - PHP_IDE_CONFIG=serverName=test.api
       - COMPOSE_PROJECT_NAME=symfony-api-test
     build:
-      context: ./phpdocker/test
+      context: ./docker/test
       dockerfile: Dockerfile
     volumes:
       - .:/application:delegated
       - ./vendor:/application/vendor:cached
-      - ./phpdocker/test/php-ini-overrides.ini:/etc/php/7.4/fpm/conf.d/99-overrides.ini
+      - ./docker/test/php-ini-overrides.ini:/etc/php/7.4/fpm/conf.d/99-overrides.ini
+    command: composer qa
