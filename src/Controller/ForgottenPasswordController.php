@@ -3,11 +3,10 @@
 namespace App\Controller;
 
 use App\Repository\UserRepository;
+use App\Service\MailerService;
+use App\Utility\TokenUtility;
 use DateTime;
-use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Mime\Email;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,8 +24,7 @@ class ForgottenPasswordController extends AbstractController
         Request $request,
         UserRepository $userRepository,
         ValidatorInterface $validator,
-        MailerInterface $mailer,
-        LoggerInterface $logger
+        MailerService $mailerService
     ): Response
     {
         $email = $request->query->get('email');
@@ -63,28 +61,17 @@ class ForgottenPasswordController extends AbstractController
             );
         }
 
-        $domain          = $_SERVER['DOMAIN'];
-        $token           = $this->generatePasswordToken();
-        $resetPasswordURL= sprintf(
-            '<a href="%s/api/v1/user/reset_password/%s">restart password</a>',
-            $domain,
-            $token
-        );
-
-        $email = (new Email())
-            ->from('hello@example.com')
-            ->to($user->getEmail())
-            ->priority(Email::PRIORITY_HIGH)
-            ->subject('Forgotten password!')
-            ->html('<p>Click link to '. $resetPasswordURL .'.</p>');
+        $token = TokenUtility::generate();
 
         try {
-            $mailer->send($email);
+            $mailerService->sendForgottenPassword($user, $token);
         } catch (Throwable $e) {
-            $logger->critical("Forgotten password email couldn't be send.", [
-                'exception' => $e,
-                'email'     => $email
-            ]);
+            return new JsonResponse(
+                [
+                    "success" => "Error occurred, please try again."
+                ],
+                Response::HTTP_OK
+            );
         }
 
         $user->setForgottenPasswordToken($token);
@@ -97,10 +84,5 @@ class ForgottenPasswordController extends AbstractController
             ],
             Response::HTTP_OK
         );
-    }
-
-    private function generatePasswordToken(): string
-    {
-        return bin2hex(random_bytes(20));
     }
 }
