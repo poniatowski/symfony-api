@@ -21,7 +21,7 @@ class ForgottenPasswordController extends AbstractController
     /**
      * @Route("/api/v1/user/forgotten_password", name="forgotten_password", methods={"GET"})
      */
-    public function forgottenPassword(
+    public function __invoke(
         Request $request,
         UserRepository $userRepository,
         ValidatorInterface $validator,

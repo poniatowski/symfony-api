@@ -22,7 +22,7 @@ class UserDetailsController extends AbstractController
      *
      * @IsGranted("ROLE_USER")
      */
-    public function addExtraDetails(
+    public function __invoke(
         Request $request,
         ValidatorInterface $validator,
         Security $security,

@@ -18,7 +18,7 @@ class ResetPasswordController
     /**
      * @Route("/api/v1/user/reset_password/{token}", name="reset_password", methods={"POST"})
      */
-    public function closeAccount(
+    public function __invoke(
         string $token,
         Request $request,
         ValidatorInterface $validator,

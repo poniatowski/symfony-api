@@ -17,7 +17,7 @@ class CloseAccountController extends AbstractController
      *
      * @IsGranted("ROLE_USER")
      */
-    public function closeAccount(Security $security, UserRepository $userRepository): Response
+    public function __invoke(Security $security, UserRepository $userRepository): Response
     {
         $user = $security->getUser();
 

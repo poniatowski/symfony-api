@@ -18,7 +18,7 @@ class RegisterUserController extends AbstractController
     /**
      * @Route("/api/v1/register/user", name="register_user", methods={"POST"})
      */
-    public function register(
+    public function __invoke(
         Request $request,
         RegisterUserHandler $registerUserHandler,
         ValidatorInterface $validator,
