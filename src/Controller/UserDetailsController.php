@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\DTO\UserDetails;
 use App\Repository\UserRepository;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -11,7 +12,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Security;
-use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Throwable;
 
@@ -35,11 +35,11 @@ class UserDetailsController extends AbstractController
             true
         );
 
-        $constraint = new Assert\Collection([
-            'firstname' => new Assert\Length(['min' => 3, 'max' => 255]),
-            'surname'   => new Assert\Length(['min' => 3, 'max' => 255]),
-        ]);
-        $violations = $validator->validate($data, $constraint);
+        $userDetails            = new UserDetails();
+        $userDetails->firstname = $data['firstname'];
+        $userDetails->surname   = $data['surname'];
+
+        $violations = $validator->validate($userDetails);
         if ($violations->count() > 0) {
             $errors = [];
             foreach ($violations as $violation) {

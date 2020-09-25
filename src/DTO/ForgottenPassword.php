@@ -2,14 +2,15 @@
 
 namespace App\DTO;
 
+use Symfony\Component\Validator\Constraints as Assert;
+
 final class ForgottenPassword
 {
     /**
      * @Assert\Sequentially({
      *     @Assert\NotBlank(),
      *     @Assert\Type("string"),
-     *     @Assert\Email(),
-     *     @AppAssert\UniqueEmail()
+     *     @Assert\Email()
      * })
      */
     public $email;
