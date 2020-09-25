@@ -17,7 +17,7 @@ class UniqueEmailValidator extends ConstraintValidator
 
     public function validate($email, Constraint $constraint): void
     {
-        if (null === $email || '' === $email) {
+        if ($email === null || $email === '') {
             return;
         }
 

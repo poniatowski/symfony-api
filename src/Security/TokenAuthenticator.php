@@ -64,12 +64,7 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
             );
         }
 
-        $password = $credentials["password"];
-        if ($this->passwordEncoder->isPasswordValid($user, $password)){
-            return true;
-        }
-
-        return false;
+        return $this->passwordEncoder->isPasswordValid($user, $credentials["password"]);
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey): ?Request
