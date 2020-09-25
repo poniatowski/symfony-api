@@ -2,7 +2,7 @@
 
 namespace App\DTO;
 
-final class ForgottenPasswordDTO
+final class ForgottenPassword
 {
     /**
      * @Assert\Sequentially({

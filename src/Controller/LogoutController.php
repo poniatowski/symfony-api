@@ -17,7 +17,7 @@ class LogoutController extends AbstractController
      */
     public function logout(): Response
     {
-        throw new Exception('We will never arrive here');
+        throw new Exception("We will never arrive here");
     }
 
     /**
@@ -25,6 +25,6 @@ class LogoutController extends AbstractController
      */
     public function logoutMessage()
     {
-        return new JsonResponse(['success' => "You've been logged out."], Response::HTTP_OK);
+        return new JsonResponse(["success" => "You've been logged out."], Response::HTTP_OK);
     }
 }

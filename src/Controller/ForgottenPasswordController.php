@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\DTO\ForgottenPasswordDTO;
+use App\DTO\ForgottenPassword;
 use App\Repository\UserRepository;
 use App\Service\MailerService;
 use App\Utility\TokenUtility;
@@ -12,7 +12,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Throwable;
 
@@ -30,7 +29,7 @@ class ForgottenPasswordController extends AbstractController
     {
         $email = $request->query->get('email');
 
-        $forgottenPasswordDTO        = new ForgottenPasswordDTO();
+        $forgottenPasswordDTO        = new ForgottenPassword();
         $forgottenPasswordDTO->email = $email;
 
         $violations = $validator->validate($forgottenPasswordDTO);
