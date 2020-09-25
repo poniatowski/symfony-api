@@ -5,10 +5,12 @@ namespace App\Service;
 use App\Entity\User;
 use Exception;
 use Psr\Log\LoggerInterface;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
+use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\RouterInterface;
-use Throwable;
 
 class MailerService
 {
@@ -32,17 +34,19 @@ class MailerService
 
     public function sendForgottenPassword(User $user, string $token): void
     {
-        $resetPasswordURL = sprintf('<a href="%s">restart password</a>', $this->getResetPasswordURL($token));
-
-        $email = (new Email())
-            ->from('hello@example.com')
-            ->to($user->getEmail())
-            ->priority(Email::PRIORITY_HIGH)
+        $email = (new TemplatedEmail())
+            ->from(new Address('hello@example.com'))
+            ->to(new Address($user->getEmail()))
             ->subject('Forgotten password!')
-            ->html('<p>Click link to '. $resetPasswordURL .'.</p>');
+            ->priority(Email::PRIORITY_HIGH)
+            ->htmlTemplate('emails/forgotten_password.html.twig')
+            ->context([
+                'resetPasswordURL' => $this->getResetPasswordURL($token),
+            ]);
+
         try {
             $this->mailer->send($email);
-        } catch (Throwable $e) {
+        } catch (TransportExceptionInterface $e) {
             $this->logger->critical("Forgotten password email couldn't be send.", [
                 'exception' => $e,
                 'email'     => $email
