@@ -17,6 +17,10 @@ class UniqueEmailValidator extends ConstraintValidator
 
     public function validate($email, Constraint $constraint): void
     {
+        if (null === $email || '' === $email) {
+            return;
+        }
+
         if ($this->repository->findByEmailAddress($email) !== null)
         {
             $this->context
