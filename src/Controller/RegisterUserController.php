@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\DTO\User as UserDTO;
 use App\Handler\RegisterUserHandler;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,17 +15,15 @@ use Throwable;
 
 class RegisterUserController extends AbstractController
 {
-    private RegisterUserHandler $registerUserHandler;
-
-    public function __construct(RegisterUserHandler $registerUserHandler)
-    {
-        $this->registerUserHandler = $registerUserHandler;
-    }
-
     /**
      * @Route("/api/v1/register/user", name="register_user", methods={"POST"})
      */
-    public function register(Request $request, ValidatorInterface $validator): Response
+    public function register(
+        Request $request,
+        RegisterUserHandler $registerUserHandler,
+        ValidatorInterface $validator,
+        LoggerInterface $logger
+    ): Response
     {
         $data = json_decode(
             $request->getContent(),
@@ -46,8 +45,13 @@ class RegisterUserController extends AbstractController
         }
 
         try {
-            $this->registerUserHandler->saveUser($userDTO);
+            $registerUserHandler->saveUser($userDTO);
         } catch (Throwable $e) {
+            $logger->critical("User wasn't saved.", [
+                'exception' => $e,
+                'email'     => $userDTO->email
+            ]);
+
             return new JsonResponse(
                 [
                     'error' => 'Unable to register user. Please, try again.'

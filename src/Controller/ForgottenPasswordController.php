@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Repository\UserRepository;
 use DateTime;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
@@ -12,26 +13,20 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Validator\Validation;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Throwable;
 
 class ForgottenPasswordController extends AbstractController
 {
-    private UserRepository $userRepository;
-
-    public function __construct(UserRepository $userRepository)
-    {
-        $this->userRepository = $userRepository;
-    }
-
     /**
      * @Route("/api/v1/user/forgotten_password", name="forgotten_password", methods={"GET"})
      */
     public function forgottenPassword(
         Request $request,
+        UserRepository $userRepository,
         ValidatorInterface $validator,
-        MailerInterface $mailer
+        MailerInterface $mailer,
+        LoggerInterface $logger
     ): Response
     {
         $email = $request->query->get('email');
@@ -48,7 +43,7 @@ class ForgottenPasswordController extends AbstractController
             return new JsonResponse(['error' => $errors], Response::HTTP_BAD_REQUEST);
         }
 
-        $user = $this->userRepository->findByEmailAddress($email);
+        $user = $userRepository->findByEmailAddress($email);
 
         if ($user === null) {
             return new JsonResponse(
@@ -86,11 +81,15 @@ class ForgottenPasswordController extends AbstractController
         try {
             $mailer->send($email);
         } catch (Throwable $e) {
+            $logger->critical("Forgotten password email couldn't be send.", [
+                'exception' => $e,
+                'email'     => $email
+            ]);
         }
 
         $user->setForgottenPasswordToken($token);
         $user->setSentForgottenPassword(new DateTime());
-        $this->userRepository->saveUser($user);
+        $userRepository->saveUser($user);
 
         return new JsonResponse(
             [
