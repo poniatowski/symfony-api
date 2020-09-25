@@ -1,4 +1,5 @@
 <?php namespace App\Tests\Controller;
+use App\Entity\User;
 use App\Tests\ApiTester;
 
 class CloseAccountCest
@@ -24,6 +25,9 @@ class CloseAccountCest
         $I->seeResponseCodeIs(\Codeception\Util\HttpCode::OK);
         $I->seeResponseIsJson();
         $I->seeResponseContains('{"success":"You\u0027ve been logged out."}');
+
+        $user = $I->grabEntityFromRepository(User::class, ['email' => 'user@example.com']);
+        $I->assertTrue($user->isClosed());
     }
 
     public function closeAccountOnNotSessionExistTest(ApiTester $I)

@@ -1,4 +1,5 @@
 <?php namespace App\Tests\Controller;
+use App\Entity\User;
 use App\Tests\ApiTester;
 
 class UserDetailsCest
@@ -30,6 +31,12 @@ class UserDetailsCest
         $I->seeResponseCodeIs(\Codeception\Util\HttpCode::OK);
         $I->seeResponseIsJson();
         $I->seeResponseContains('{"success":"User details successfully added."}');
+
+        $user = $I->grabEntityFromRepository(User::class, ['email' => 'user@example.com']);
+        $I->assertSame('user@example.com', $user->getEmail());
+        $I->assertSame('Firstname', $user->getFirstName());
+        $I->assertSame('Surname', $user->getSurname());
+        $I->assertFalse($user->isClosed());
     }
 
     public function addExtraUserDetailsOnInvalidFirstnameTest(ApiTester $I)

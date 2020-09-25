@@ -36,6 +36,13 @@ class ResetPasswordCest
         $I->seeResponseCodeIs(\Codeception\Util\HttpCode::OK);
         $I->seeResponseIsJson();
         $I->seeResponseContains('{"success":"Your password has been successfully updated."}');
+
+        $user = $I->grabEntityFromRepository(User::class, [
+            'email' => 'user@example.com'
+        ]);
+        $I->assertSame('user@example.com', $user->getEmail());
+        $I->assertNull($user->getForgottenPasswordToken());
+        $I->assertNull($user->getSentForgottenPassword());
     }
 
     public function onAlreadyTakenTokenTest(ApiTester $I)

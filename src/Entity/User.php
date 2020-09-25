@@ -262,7 +262,7 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getSentForgottenPassword(): DateTimeInterface
+    public function getSentForgottenPassword(): ?DateTimeInterface
     {
         return $this->sentForgottenPassword;
     }

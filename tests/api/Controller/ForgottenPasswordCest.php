@@ -1,4 +1,5 @@
 <?php namespace App\Tests\Controller;
+use App\Entity\User;
 use App\Tests\ApiTester;
 
 class ForgottenPasswordCest
@@ -28,6 +29,13 @@ class ForgottenPasswordCest
         $I->seeResponseCodeIs(\Codeception\Util\HttpCode::OK);
         $I->seeResponseIsJson();
         $I->seeResponseContains('{"success":"Email has been successfully sent to you email address"}');
+
+        $user = $I->grabEntityFromRepository(User::class, [
+            'email' => 'user@example.com'
+        ]);
+        $I->assertSame('user@example.com', $user->getEmail());
+        $I->assertNotNull($user->getForgottenPasswordToken());
+        $I->assertNotNull($user->getSentForgottenPassword());
     }
 
     public function notRecogniseUserTest(ApiTester $I)
