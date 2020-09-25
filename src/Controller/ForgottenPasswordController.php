@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\DTO\ForgottenPasswordDTO;
 use App\Repository\UserRepository;
 use App\Service\MailerService;
 use App\Utility\TokenUtility;
@@ -29,10 +30,10 @@ class ForgottenPasswordController extends AbstractController
     {
         $email = $request->query->get('email');
 
-        $constraint = new Assert\Collection([
-            'email' => new Assert\Email(),
-        ]);
-        $violations = $validator->validate(['email' => $email], $constraint);
+        $forgottenPasswordDTO        = new ForgottenPasswordDTO();
+        $forgottenPasswordDTO->email = $email;
+
+        $violations = $validator->validate($forgottenPasswordDTO);
         if ($violations->count() > 0) {
             $errors = [];
             foreach ($violations as $violation) {
