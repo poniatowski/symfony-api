@@ -10,11 +10,11 @@ final class User
     public $id;
 
     /**
-     * @Assert\Email
-     * @AppAssert\UniqueEmail()
      * @Assert\Sequentially({
      *     @Assert\NotBlank(),
-     *     @Assert\Type("string")
+     *     @Assert\Type("string"),
+     *     @Assert\Email(),
+     *     @AppAssert\UniqueEmail()
      * })
      */
     public $email;
