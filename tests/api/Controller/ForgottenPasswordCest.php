@@ -3,10 +3,6 @@ use App\Tests\ApiTester;
 
 class ForgottenPasswordCest
 {
-    public function _before(ApiTester $I)
-    {
-    }
-
     public function closeAccountOnSuccessTest(ApiTester $I)
     {
         $I->haveHttpHeader('Content-Type', 'application/json');

@@ -3,10 +3,6 @@ use App\Tests\ApiTester;
 
 class LoginCest
 {
-    public function _before(ApiTester $I)
-    {
-    }
-
     public function loginOnSuccessTest(ApiTester $I)
     {
         $I->haveHttpHeader('Content-Type', 'application/json');

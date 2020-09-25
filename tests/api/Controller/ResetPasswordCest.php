@@ -5,10 +5,6 @@ use DateTime;
 
 class ResetPasswordCest
 {
-    public function _before(ApiTester $I)
-    {
-    }
-
     public function resetPasswordOnSuccessTest(ApiTester $I)
     {
         $I->haveHttpHeader('Content-Type', 'application/json');

@@ -3,10 +3,6 @@ use App\Tests\ApiTester;
 
 class LogoutCest
 {
-    public function _before(ApiTester $I)
-    {
-    }
-
     public function logoutOnSuccessTest(ApiTester $I)
     {
         $I->haveHttpHeader('Content-Type', 'application/json');
