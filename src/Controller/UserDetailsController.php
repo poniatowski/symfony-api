@@ -12,6 +12,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Validator\Validation;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Throwable;
 
 class UserDetailsController extends AbstractController
@@ -21,14 +22,18 @@ class UserDetailsController extends AbstractController
      *
      * @IsGranted("ROLE_USER")
      */
-    public function addExtraDetails(Request $request, Security $security, UserRepository $userRepository): Response
+    public function addExtraDetails(
+        Request $request,
+        ValidatorInterface $validator,
+        Security $security,
+        UserRepository $userRepository
+    ): Response
     {
         $data = json_decode(
             $request->getContent(),
             true
         );
 
-        $validator = Validation::createValidator();
         $constraint = new Assert\Collection(array(
             'firstname' => new Assert\Length(array('min' => 3, 'max' => 255)),
             'surname' => new Assert\Length(array('min' => 3, 'max' => 255)),

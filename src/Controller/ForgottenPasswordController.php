@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Validation;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Throwable;
 
 class ForgottenPasswordController extends AbstractController
@@ -29,12 +30,12 @@ class ForgottenPasswordController extends AbstractController
      */
     public function forgottenPassword(
         Request $request,
+        ValidatorInterface $validator,
         MailerInterface $mailer
     ): Response
     {
         $email = $request->query->get('email');
 
-        $validator = Validation::createValidator();
         $constraint = new Assert\Collection(array(
             'email' => new Assert\Email(),
         ));
