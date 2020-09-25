@@ -31,9 +31,9 @@ class ForgottenPasswordController extends AbstractController
     {
         $email = $request->query->get('email');
 
-        $constraint = new Assert\Collection(array(
+        $constraint = new Assert\Collection([
             'email' => new Assert\Email(),
-        ));
+        ]);
         $violations = $validator->validate(['email' => $email], $constraint);
         if ($violations->count() > 0) {
             $errors = [];

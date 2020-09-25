@@ -12,9 +12,9 @@ class UserTest extends \Codeception\Test\Unit
 
     public function testUserEntity(): void
     {
-        $closedDate = new DateTime('2020-01-01');
-        $registeredDate = new DateTime('2018-01-01');
-        $removedDate = new DateTime('2020-07-21');
+        $closedDate            = new DateTime('2020-01-01');
+        $registeredDate        = new DateTime('2018-01-01');
+        $removedDate           = new DateTime('2020-07-21');
         $sentForgottenPassword = new DateTime('2019-04-29');
 
         $user = new User();

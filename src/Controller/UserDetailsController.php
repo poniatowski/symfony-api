@@ -35,10 +35,10 @@ class UserDetailsController extends AbstractController
             true
         );
 
-        $constraint = new Assert\Collection(array(
-            'firstname' => new Assert\Length(array('min' => 3, 'max' => 255)),
-            'surname' => new Assert\Length(array('min' => 3, 'max' => 255)),
-        ));
+        $constraint = new Assert\Collection([
+            'firstname' => new Assert\Length(['min' => 3, 'max' => 255]),
+            'surname'   => new Assert\Length(['min' => 3, 'max' => 255]),
+        ]);
         $violations = $validator->validate($data, $constraint);
         if ($violations->count() > 0) {
             $errors = [];

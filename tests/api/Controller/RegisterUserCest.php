@@ -1,12 +1,9 @@
 <?php namespace App\Tests\Controller;
+use App\Entity\User;
 use App\Tests\ApiTester;
 
 class RegisterUserCest
 {
-    public function _before(ApiTester $I)
-    {
-    }
-
     public function registerUserOnSuccessTest(ApiTester $I)
     {
         $I->haveHttpHeader('Content-Type', 'application/json');
@@ -18,6 +15,7 @@ class RegisterUserCest
         $I->seeResponseCodeIs(\Codeception\Util\HttpCode::CREATED); // 201
         $I->seeResponseIsJson();
         $I->seeResponseContains('{"status":"User registered!"}');
+        $I->grabEntityFromRepository(User::class, ['email' => 'user@example.com']);
     }
 
     public function registerUserOnPasswordsDontMatchTest(ApiTester $I)
@@ -31,6 +29,7 @@ class RegisterUserCest
         $I->seeResponseCodeIs(\Codeception\Util\HttpCode::BAD_REQUEST);
         $I->seeResponseIsJson();
         $I->seeResponseContains('{"error":{"password":"Password does not match the password confirmation."}}');
+        $I->dontSeeInRepository();
     }
 
     public function registerUserOnPasswordNeedsUppercaseLetterTest(ApiTester $I)
