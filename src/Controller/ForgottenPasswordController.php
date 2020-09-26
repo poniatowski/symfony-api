@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\DTO\ForgottenPassword;
 use App\Repository\UserRepository;
 use App\Service\MailerService;
+use App\Service\ValidateService;
 use App\Utility\TokenUtility;
 use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -12,7 +13,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\Routing\RouterInterface;
 use Throwable;
 
 class ForgottenPasswordController extends AbstractController
@@ -23,8 +24,9 @@ class ForgottenPasswordController extends AbstractController
     public function __invoke(
         Request $request,
         UserRepository $userRepository,
-        ValidatorInterface $validator,
-        MailerService $mailerService
+        ValidateService $validator,
+        MailerService $mailerService,
+        RouterInterface $router
     ): Response
     {
         $email = $request->query->get('email');
@@ -32,12 +34,9 @@ class ForgottenPasswordController extends AbstractController
         $forgottenPasswordDTO        = new ForgottenPassword();
         $forgottenPasswordDTO->email = $email;
 
-        $violations = $validator->validate($forgottenPasswordDTO);
-        if ($violations->count() > 0) {
-            $errors = [];
-            foreach ($violations as $violation) {
-                $errors[$violation->getPropertyPath()] = $violation->getMessage();
-            }
+        $errors = $validator->validate($forgottenPasswordDTO);
+
+        if (count($errors) > 0) {
             return new JsonResponse(['error' => $errors], Response::HTTP_BAD_REQUEST);
         }
 
@@ -61,14 +60,17 @@ class ForgottenPasswordController extends AbstractController
             );
         }
 
-        $token = TokenUtility::generate();
+        $token            = TokenUtility::generate();
+        $resetPasswordURL = $router->generate('reset_password', ['token' => $token], RouterInterface::ABSOLUTE_URL);
 
         try {
-            $mailerService->sendForgottenPassword($user, $token);
+            $mailerService->send($user->getEmail(), 'Forgotten password!', 'mails/forgotten_password.html.twig', [
+                'resetPasswordURL'  => $resetPasswordURL,
+            ]);
         } catch (Throwable $e) {
             return new JsonResponse(
                 [
-                    "success" => "Error occurred, please try again."
+                    "error" => "Error occurred, please try again."
                 ],
                 Response::HTTP_OK
             );

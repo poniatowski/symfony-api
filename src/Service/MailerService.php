@@ -2,47 +2,47 @@
 
 namespace App\Service;
 
-use App\Entity\User;
 use Exception;
 use Psr\Log\LoggerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mime\Address;
-use Symfony\Component\Mime\Email;
-use Symfony\Component\Routing\RouterInterface;
 
 class MailerService
 {
     protected MailerInterface $mailer;
 
-    protected RouterInterface $router;
-
     protected LoggerInterface $logger;
 
-    public function __construct(MailerInterface $mailer, RouterInterface $router, LoggerInterface $logger)
+    protected ?string $senderAddress;
+
+    protected ?string $senderName;
+
+    public function __construct(
+        MailerInterface $mailer,
+        LoggerInterface $logger,
+        string $senderAddress = null,
+        string $senderName = null
+    )
     {
-        $this->mailer = $mailer;
-        $this->router = $router;
-        $this->logger = $logger;
+        $this->mailer        = $mailer;
+        $this->logger        = $logger;
+        $this->senderAddress = $senderAddress;
+        $this->senderName    = $senderName;
     }
 
-    protected function getResetPasswordURL(string $token): string
-    {
-        return $_SERVER['DOMAIN'] .  $this->router->generate('reset_password', array('token' => $token));
-    }
-
-    public function sendForgottenPassword(User $user, string $token): void
+    public function send(string $recipient, string $subject, string $templatePath, array $context = []): void
     {
         $email = (new TemplatedEmail())
-            ->from(new Address('hello@example.com'))
-            ->to(new Address($user->getEmail()))
-            ->subject('Forgotten password!')
-            ->priority(Email::PRIORITY_HIGH)
-            ->htmlTemplate('emails/forgotten_password.html.twig')
-            ->context([
-                'resetPasswordURL' => $this->getResetPasswordURL($token),
-            ]);
+            ->from(new Address($this->senderAddress, $this->senderName))
+            ->to($recipient)
+            ->subject($subject)
+            ->htmlTemplate($templatePath);
+
+        if ($context) {
+            $email->context($context);
+        }
 
         try {
             $this->mailer->send($email);

@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Throwable;
 
@@ -27,17 +28,11 @@ class UserDetailsController extends AbstractController
         ValidatorInterface $validator,
         Security $security,
         UserRepository $userRepository,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        SerializerInterface $serializer
     ): Response
     {
-        $data = json_decode(
-            $request->getContent(),
-            true
-        );
-
-        $userDetails            = new UserDetails();
-        $userDetails->firstname = $data['firstname'];
-        $userDetails->surname   = $data['surname'];
+        $userDetails = $serializer->deserialize($request->getContent(), UserDetails::class, 'json');
 
         $violations = $validator->validate($userDetails);
         if ($violations->count() > 0) {
@@ -50,8 +45,8 @@ class UserDetailsController extends AbstractController
 
         try {
             $user = $security->getUser();
-            $user->setFirstName(ucwords($data['firstname']));
-            $user->setSurname(ucwords($data['surname']));
+            $user->setFirstName(ucwords($userDetails->firstname));
+            $user->setSurname(ucwords($userDetails->surname));
             $userRepository->saveUser($user);
         } catch (Throwable $e) {
             $logger->critical("We can't update user.", [
