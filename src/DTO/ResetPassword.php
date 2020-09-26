@@ -2,9 +2,10 @@
 
 namespace App\DTO;
 
+use App\Util\PayloadInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
-final class ResetPassword
+final class ResetPassword implements PayloadInterface
 {
     /**
      * @Assert\Sequentially({
@@ -28,17 +29,17 @@ final class ResetPassword
      *          match=true,
      *          message="Your password needs to contain a uppercase"
      *      )
-     * })
+     * }, groups={"create"})
      */
     public $password;
 
     /**
-     * @Assert\NotBlank()
+     * @Assert\NotBlank(groups={"create"})
      */
     public $passwordConfirmation;
 
     /**
-     * @Assert\IsTrue(message="Password does not match the password confirmation.")
+     * @Assert\IsTrue(message="Password does not match the password confirmation.", groups={"create"})
      */
     public function isPassword(): bool
     {

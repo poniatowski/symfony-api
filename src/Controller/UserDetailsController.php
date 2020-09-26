@@ -2,10 +2,8 @@
 
 namespace App\Controller;
 
-use App\DTO\UserDetails;
-use App\Exception\JsonValidationException;
+use App\DTO\User;
 use App\Repository\UserRepository;
-use App\Service\ValidateService;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -25,26 +23,18 @@ class UserDetailsController extends AbstractController
      * @IsGranted("ROLE_USER")
      */
     public function __invoke(
+        User $userDetailsDTO,
         Request $request,
-        ValidateService $validator,
         Security $security,
         UserRepository $userRepository,
         LoggerInterface $logger,
         SerializerInterface $serializer
     ): Response
     {
-        $userDetails = $serializer->deserialize($request->getContent(), UserDetails::class, 'json');
-
-        try {
-            $validator->validate($userDetails);
-        } catch (JsonValidationException $errors) {
-            return new JsonResponse(['error' => $errors->getErrorMessage()], Response::HTTP_BAD_REQUEST);
-        }
-
         try {
             $user = $security->getUser();
-            $user->setFirstName(ucwords($userDetails->firstname));
-            $user->setSurname(ucwords($userDetails->surname));
+            $user->setFirstName(ucwords($userDetailsDTO->firstname));
+            $user->setSurname(ucwords($userDetailsDTO->surname));
             $userRepository->saveUser($user);
         } catch (Throwable $e) {
             $logger->critical("We can't update user.", [

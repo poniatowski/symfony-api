@@ -3,10 +3,8 @@
 namespace App\Controller;
 
 use App\DTO\ForgottenPassword;
-use App\Exception\JsonValidationException;
 use App\Repository\UserRepository;
 use App\Service\MailerService;
-use App\Service\ValidateService;
 use App\Utility\TokenUtility;
 use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -20,33 +18,22 @@ use Throwable;
 class ForgottenPasswordController extends AbstractController
 {
     /**
-     * @Route("/api/v1/user/forgotten_password", name="forgotten_password", methods={"GET"})
+     * @Route("/api/v1/user/forgotten_password", name="forgotten_password", methods={"POST"})
      */
     public function __invoke(
+        ForgottenPassword $forgottenPasswordDTO,
         Request $request,
         UserRepository $userRepository,
-        ValidateService $validator,
         MailerService $mailerService,
         RouterInterface $router
     ): Response
     {
-        $email = $request->query->get('email');
-
-        $forgottenPasswordDTO        = new ForgottenPassword();
-        $forgottenPasswordDTO->email = $email;
-
-        try {
-            $validator->validate($forgottenPasswordDTO);
-        } catch (JsonValidationException $errors) {
-            return new JsonResponse(['error' => $errors->getErrorMessage()], Response::HTTP_BAD_REQUEST);
-        }
-
-        $user = $userRepository->findByEmailAddress($email);
+        $user = $userRepository->findByEmailAddress($forgottenPasswordDTO->email);
 
         if ($user === null) {
             return new JsonResponse(
                 [
-                    'error' => sprintf('The email address (%s) has not been recognised.', $email)
+                    'error' => sprintf('The email address (%s) has not been recognised.', $forgottenPasswordDTO->email)
                 ],
                 Response::HTTP_BAD_REQUEST
             );

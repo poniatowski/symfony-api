@@ -2,10 +2,8 @@
 
 namespace App\Controller;
 
-use App\Exception\JsonValidationException;
 use App\Repository\UserRepository;
-use App\DTO\ResetPassword as UserDTO;
-use App\Service\ValidateService;
+use App\DTO\ResetPassword as ResetPasswordDTO;
 use DateTime;
 use DateInterval;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -21,8 +19,8 @@ class ResetPasswordController
      */
     public function __invoke(
         string $token,
+        ResetPasswordDTO $resetPasswordDTO,
         Request $request,
-        ValidateService $validator,
         UserRepository $userRepository,
         UserPasswordEncoderInterface $passwordEncoder
     ): Response
@@ -50,24 +48,9 @@ class ResetPasswordController
             );
         }
 
-        $data = json_decode(
-            $request->getContent(),
-            true
-        );
-
-        $userDTO = new UserDTO();
-        $userDTO->password             = $data['newPassword'] ?? null;
-        $userDTO->passwordConfirmation = $data['newPasswordConfirmation'] ?? null;
-
-        try {
-            $validator->validate($userDTO);
-        } catch (JsonValidationException $errors) {
-            return new JsonResponse(['error' => $errors->getErrorMessage()], Response::HTTP_BAD_REQUEST);
-        }
-
         $newEncodedPassword = $passwordEncoder->encodePassword(
             $user,
-            $userDTO->password
+            $resetPasswordDTO->password
         );
         $userRepository->upgradePassword($user, $newEncodedPassword);
 

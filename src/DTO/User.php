@@ -2,10 +2,11 @@
 
 namespace App\DTO;
 
+use App\Util\PayloadInterface;
 use App\Validator\Constraints as AppAssert;
 use Symfony\Component\Validator\Constraints as Assert;
 
-final class User
+final class User implements PayloadInterface
 {
     public $id;
 
@@ -15,7 +16,7 @@ final class User
      *     @Assert\Type("string"),
      *     @Assert\Email(),
      *     @AppAssert\UniqueEmail()
-     * })
+     * }, groups={"create"})
      */
     public $email;
 
@@ -41,20 +42,42 @@ final class User
      *          match=true,
      *          message="Your password needs to contain a uppercase"
      *      )
-     * })
+     * }, groups={"create"})
      */
     public $password;
 
     /**
-     * @Assert\NotBlank()
+     * @Assert\NotBlank(groups={"create"})
      */
     public $passwordConfirmation;
 
     /**
-     * @Assert\IsTrue(message="Password does not match the password confirmation.")
+     * @Assert\IsTrue(message="Password does not match the password confirmation.", groups={"create"})
      */
     public function isPassword(): bool
     {
         return ($this->password === $this->passwordConfirmation);
     }
+
+    /**
+     * @Assert\Sequentially({
+     *     @Assert\NotBlank(),
+     *     @Assert\Length(
+     *          min = 3,
+     *          max = 255
+     *      )
+     * }, groups={"edit"})
+     */
+    public $firstname;
+
+    /**
+     * @Assert\Sequentially({
+     *     @Assert\NotBlank(),
+     *     @Assert\Length(
+     *          min = 3,
+     *          max = 255
+     *      )
+     * }, groups={"edit"})
+     */
+    public $surname;
 }

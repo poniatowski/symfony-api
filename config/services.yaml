@@ -35,3 +35,11 @@ services:
         arguments:
             $senderAddress: '%env(MAILER_SENDER_ADDRESS)%'
             $senderName: '%env(MAILER_SENDER_NAME)%'
+
+    App\ArgumentResolver\PayloadResolver:
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception }
+
+    App\EventSubscriber\PayloadExceptionSubscriber:
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception }
