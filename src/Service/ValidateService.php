@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Exception\JsonValidationException;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class ValidateService
@@ -13,7 +14,7 @@ class ValidateService
         $this->validator = $validator;
     }
 
-    public function validate($value): array
+    public function validate($value): void
     {
         $violations = $this->validator->validate($value);
         if ($violations->count() > 0) {
@@ -22,9 +23,7 @@ class ValidateService
                 $errors[$violation->getPropertyPath()] = $violation->getMessage();
             }
 
-            return $errors;
+            throw new JsonValidationException($errors);
         }
-
-        return [];
     }
 }

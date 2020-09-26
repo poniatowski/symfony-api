@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\DTO\ForgottenPassword;
+use App\Exception\JsonValidationException;
 use App\Repository\UserRepository;
 use App\Service\MailerService;
 use App\Service\ValidateService;
@@ -34,10 +35,10 @@ class ForgottenPasswordController extends AbstractController
         $forgottenPasswordDTO        = new ForgottenPassword();
         $forgottenPasswordDTO->email = $email;
 
-        $errors = $validator->validate($forgottenPasswordDTO);
-
-        if (count($errors) > 0) {
-            return new JsonResponse(['error' => $errors], Response::HTTP_BAD_REQUEST);
+        try {
+            $validator->validate($forgottenPasswordDTO);
+        } catch (JsonValidationException $errors) {
+            return new JsonResponse(['error' => $errors->getErrorMessage()], Response::HTTP_BAD_REQUEST);
         }
 
         $user = $userRepository->findByEmailAddress($email);
