@@ -28,7 +28,7 @@ class RegisterUserCest
         ]);
         $I->seeResponseCodeIs(\Codeception\Util\HttpCode::BAD_REQUEST);
         $I->seeResponseIsJson();
-        $I->seeResponseContains('{"error":{"password":"Password does not match the password confirmation."}}');
+        $I->seeResponseContains('{"password":["Password does not match the password confirmation."]}');
         $I->dontSeeInRepository(User::class, ['email' => 'user@example.com']);
     }
 
@@ -42,7 +42,7 @@ class RegisterUserCest
         ]);
         $I->seeResponseCodeIs(\Codeception\Util\HttpCode::BAD_REQUEST);
         $I->seeResponseIsJson();
-        $I->seeResponseContains('{"error":{"password":"Your password needs to contain a uppercase"}}');
+        $I->seeResponseContains('{"password":["Your password needs to contain a uppercase"]}');
         $I->dontSeeInRepository(User::class, ['email' => 'user@example.com']);
     }
 
@@ -56,7 +56,7 @@ class RegisterUserCest
         ]);
         $I->seeResponseCodeIs(\Codeception\Util\HttpCode::BAD_REQUEST);
         $I->seeResponseIsJson();
-        $I->seeResponseContains('{"error":{"password":"Your password needs to contains at least one number"}}');
+        $I->seeResponseContains('{"password":["Your password needs to contains at least one number"]}');
         $I->dontSeeInRepository(User::class, ['email' => 'user@example.com']);
     }
 }

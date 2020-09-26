@@ -21,7 +21,7 @@ class ResetPasswordCest
         ]);
 
         $I->haveHttpHeader('Content-Type', 'application/json');
-        $I->sendGET('/user/forgotten-password', [
+        $I->sendPOST('/user/forgotten-password', [
             'email' => 'user@example.com',
         ]);
 
@@ -30,8 +30,8 @@ class ResetPasswordCest
 
         $I->haveHttpHeader('Content-Type', 'application/json');
         $I->sendPOST('/user/reset-password/' . $user->getForgottenPasswordToken(), [
-            'newPassword'             => 'Password2',
-            'newPasswordConfirmation' => 'Password2'
+            'password'             => 'Password2',
+            'passwordConfirmation' => 'Password2'
         ]);
         $I->seeResponseCodeIs(\Codeception\Util\HttpCode::OK);
         $I->seeResponseIsJson();
@@ -49,8 +49,8 @@ class ResetPasswordCest
     {
         $I->haveHttpHeader('Content-Type', 'application/json');
         $I->sendPOST('/user/reset-password/TOKEN', [
-            'newPassword'             => 'Password2',
-            'newPasswordConfirmation' => 'Password2'
+            'password'             => 'Password2',
+            'passwordConfirmation' => 'Password2'
         ]);
         $I->seeResponseCodeIs(\Codeception\Util\HttpCode::BAD_REQUEST);
         $I->seeResponseIsJson();
@@ -73,7 +73,7 @@ class ResetPasswordCest
         ]);
 
         $I->haveHttpHeader('Content-Type', 'application/json');
-        $I->sendGET('/user/forgotten-password', [
+        $I->sendPOST('/user/forgotten-password', [
             'email' => 'user@example.com',
         ]);
 
@@ -88,8 +88,8 @@ class ResetPasswordCest
 
         $I->haveHttpHeader('Content-Type', 'application/json');
         $I->sendPOST('/user/reset-password/' . $user->getForgottenPasswordToken(), [
-            'newPassword'             => 'Password2',
-            'newPasswordConfirmation' => 'Password2'
+            'password'             => 'Password2',
+            'passwordConfirmation' => 'Password2'
         ]);
         $I->seeResponseCodeIs(\Codeception\Util\HttpCode::BAD_REQUEST);
         $I->seeResponseIsJson();
@@ -112,7 +112,7 @@ class ResetPasswordCest
         ]);
 
         $I->haveHttpHeader('Content-Type', 'application/json');
-        $I->sendGET('/user/forgotten-password', [
+        $I->sendPOST('/user/forgotten-password', [
             'email' => 'user@example.com',
         ]);
 
@@ -121,11 +121,11 @@ class ResetPasswordCest
 
         $I->haveHttpHeader('Content-Type', 'application/json');
         $I->sendPOST('/user/reset-password/' . $user->getForgottenPasswordToken(), [
-            'newPassword'             => 'Password2',
-            'newPasswordConfirmation' => 'password'
+            'password'             => 'Password2',
+            'passwordConfirmation' => 'password'
         ]);
         $I->seeResponseCodeIs(\Codeception\Util\HttpCode::BAD_REQUEST);
         $I->seeResponseIsJson();
-        $I->seeResponseContains('{"error":{"password":"Password does not match the password confirmation."}}');
+        $I->seeResponseContains('{"password":["Password does not match the password confirmation."]}');
     }
 }

@@ -48,7 +48,7 @@ class UserDetailsCest
         ]);
         $I->seeResponseCodeIs(\Codeception\Util\HttpCode::BAD_REQUEST);
         $I->seeResponseIsJson();
-        $I->seeResponseContains('{"error":{"firstname":"This value is too short. It should have 3 characters or more."}}');
+        $I->seeResponseContains('{"firstname":["This value is too short. It should have 3 characters or more."]}');
     }
 
     public function addExtraUserDetailsOnInvalidSurnameTest(ApiTester $I)
@@ -60,7 +60,7 @@ class UserDetailsCest
         ]);
         $I->seeResponseCodeIs(\Codeception\Util\HttpCode::BAD_REQUEST);
         $I->seeResponseIsJson();
-        $I->seeResponseContains('{"error":{"surname":"This value is too short. It should have 3 characters or more."}}');
+        $I->seeResponseContains('{"surname":["This value is too short. It should have 3 characters or more."]}');
     }
 
     public function addExtraUserDetailsOnMissingFieldTest(ApiTester $I)
@@ -71,6 +71,6 @@ class UserDetailsCest
         ]);
         $I->seeResponseCodeIs(\Codeception\Util\HttpCode::BAD_REQUEST);
         $I->seeResponseIsJson();
-        $I->seeResponseContains('{"error":{"surname":"This value should not be blank."}}');
+        $I->seeResponseContains('{"surname":["This value should not be blank."]}');
     }
 }
