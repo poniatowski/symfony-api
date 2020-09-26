@@ -57,7 +57,7 @@ class ForgottenPasswordCest
         ]);
         $I->seeResponseCodeIs(\Codeception\Util\HttpCode::BAD_REQUEST);
         $I->seeResponseIsJson();
-        $I->seeResponseContains('{"error":{"[email]":"This value is not a valid email address."}}');
+        $I->seeResponseContains('{"error":{"email":"This value is not a valid email address."}}');
     }
 
     public function onClosedAccountTest(ApiTester $I)
