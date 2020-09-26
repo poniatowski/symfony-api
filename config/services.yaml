@@ -33,5 +33,5 @@ services:
 
     App\Service\MailerService:
         arguments:
-            $senderAddress: 'admin@example.com'
-            $senderName: 'Admin'
+            $senderAddress: '%env(MAILER_SENDER_ADDRESS)%'
+            $senderName: '%env(MAILER_SENDER_NAME)%'

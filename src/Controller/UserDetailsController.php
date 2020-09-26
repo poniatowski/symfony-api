@@ -3,7 +3,9 @@
 namespace App\Controller;
 
 use App\DTO\UserDetails;
+use App\Exception\JsonValidationException;
 use App\Repository\UserRepository;
+use App\Service\ValidateService;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -13,7 +15,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Serializer\SerializerInterface;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Throwable;
 
 class UserDetailsController extends AbstractController
@@ -25,7 +26,7 @@ class UserDetailsController extends AbstractController
      */
     public function __invoke(
         Request $request,
-        ValidatorInterface $validator,
+        ValidateService $validator,
         Security $security,
         UserRepository $userRepository,
         LoggerInterface $logger,
@@ -34,13 +35,10 @@ class UserDetailsController extends AbstractController
     {
         $userDetails = $serializer->deserialize($request->getContent(), UserDetails::class, 'json');
 
-        $violations = $validator->validate($userDetails);
-        if ($violations->count() > 0) {
-            $errors = [];
-            foreach ($violations as $violation) {
-                $errors[$violation->getPropertyPath()] = $violation->getMessage();
-            }
-            return new JsonResponse(['error' => $errors], Response::HTTP_BAD_REQUEST);
+        try {
+            $validator->validate($userDetails);
+        } catch (JsonValidationException $errors) {
+            return new JsonResponse(['error' => $errors->getErrorMessage()], Response::HTTP_BAD_REQUEST);
         }
 
         try {
