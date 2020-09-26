@@ -5,7 +5,7 @@ namespace App\Controller;
 use App\DTO\ForgottenPassword;
 use App\Repository\UserRepository;
 use App\Service\MailerService;
-use App\Utility\TokenUtility;
+use App\Util\TokenUtil;
 use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -48,7 +48,7 @@ class ForgottenPasswordController extends AbstractController
             );
         }
 
-        $token            = TokenUtility::generate();
+        $token            = TokenUtil::generate();
         $resetPasswordURL = $router->generate('reset_password', ['token' => $token], RouterInterface::ABSOLUTE_URL);
 
         try {

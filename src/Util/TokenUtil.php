@@ -1,8 +1,8 @@
 <?php declare(strict_types = 1);
 
-namespace App\Utility;
+namespace App\Util;
 
-class TokenUtility
+class TokenUtil
 {
     public static function generate(int $length = 20): string
     {
