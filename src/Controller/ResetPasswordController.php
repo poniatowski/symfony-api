@@ -2,8 +2,10 @@
 
 namespace App\Controller;
 
+use App\Exception\JsonValidationException;
 use App\Repository\UserRepository;
 use App\DTO\ResetPassword as UserDTO;
+use App\Service\ValidateService;
 use DateTime;
 use DateInterval;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -11,7 +13,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class ResetPasswordController
 {
@@ -21,7 +22,7 @@ class ResetPasswordController
     public function __invoke(
         string $token,
         Request $request,
-        ValidatorInterface $validator,
+        ValidateService $validator,
         UserRepository $userRepository,
         UserPasswordEncoderInterface $passwordEncoder
     ): Response
@@ -58,13 +59,10 @@ class ResetPasswordController
         $userDTO->password             = $data['newPassword'] ?? null;
         $userDTO->passwordConfirmation = $data['newPasswordConfirmation'] ?? null;
 
-        $violations = $validator->validate($userDTO);
-        if ($violations->count() > 0) {
-            $errors = [];
-            foreach ($violations as $violation) {
-                $errors[$violation->getPropertyPath()] = $violation->getMessage();
-            }
-            return new JsonResponse(['error' => $errors], Response::HTTP_BAD_REQUEST);
+        try {
+            $validator->validate($userDTO);
+        } catch (JsonValidationException $errors) {
+            return new JsonResponse(['error' => $errors->getErrorMessage()], Response::HTTP_BAD_REQUEST);
         }
 
         $newEncodedPassword = $passwordEncoder->encodePassword(

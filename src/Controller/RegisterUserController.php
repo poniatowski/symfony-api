@@ -3,14 +3,15 @@
 namespace App\Controller;
 
 use App\DTO\User as UserDTO;
+use App\Exception\JsonValidationException;
 use App\Handler\RegisterUserHandler;
+use App\Service\ValidateService;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Throwable;
 
 class RegisterUserController extends AbstractController
@@ -21,7 +22,7 @@ class RegisterUserController extends AbstractController
     public function __invoke(
         Request $request,
         RegisterUserHandler $registerUserHandler,
-        ValidatorInterface $validator,
+        ValidateService $validator,
         LoggerInterface $logger
     ): Response
     {
@@ -35,13 +36,10 @@ class RegisterUserController extends AbstractController
         $userDTO->password             = $data['password'] ?? null;
         $userDTO->passwordConfirmation = $data['passwordConfirmation'] ?? null;
 
-        $violations = $validator->validate($userDTO);
-        if ($violations->count() > 0) {
-            $errors = [];
-            foreach ($violations as $violation) {
-                $errors[$violation->getPropertyPath()] = $violation->getMessage();
-            }
-            return new JsonResponse(['error' => $errors], Response::HTTP_BAD_REQUEST);
+        try {
+            $validator->validate($userDTO);
+        } catch (JsonValidationException $errors) {
+            return new JsonResponse(['error' => $errors->getErrorMessage()], Response::HTTP_BAD_REQUEST);
         }
 
         try {
