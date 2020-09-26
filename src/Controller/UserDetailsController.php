@@ -18,7 +18,7 @@ use Throwable;
 class UserDetailsController extends AbstractController
 {
     /**
-     * @Route("/api/v1/user/extra_details", name="add_extra_details", methods={"PATCH"})
+     * @Route("/api/v1/user/extra-details", name="add_extra_details", methods={"PATCH"})
      *
      * @IsGranted("ROLE_USER")
      */

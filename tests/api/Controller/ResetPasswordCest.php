@@ -21,7 +21,7 @@ class ResetPasswordCest
         ]);
 
         $I->haveHttpHeader('Content-Type', 'application/json');
-        $I->sendGET('/user/forgotten_password', [
+        $I->sendGET('/user/forgotten-password', [
             'email' => 'user@example.com',
         ]);
 
@@ -29,7 +29,7 @@ class ResetPasswordCest
         $user = $I->grabEntityFromRepository(User::class, array('email' => 'user@example.com'));
 
         $I->haveHttpHeader('Content-Type', 'application/json');
-        $I->sendPOST('/user/reset_password/' . $user->getForgottenPasswordToken(), [
+        $I->sendPOST('/user/reset-password/' . $user->getForgottenPasswordToken(), [
             'newPassword'             => 'Password2',
             'newPasswordConfirmation' => 'Password2'
         ]);
@@ -48,7 +48,7 @@ class ResetPasswordCest
     public function onAlreadyTakenTokenTest(ApiTester $I)
     {
         $I->haveHttpHeader('Content-Type', 'application/json');
-        $I->sendPOST('/user/reset_password/TOKEN', [
+        $I->sendPOST('/user/reset-password/TOKEN', [
             'newPassword'             => 'Password2',
             'newPasswordConfirmation' => 'Password2'
         ]);
@@ -73,7 +73,7 @@ class ResetPasswordCest
         ]);
 
         $I->haveHttpHeader('Content-Type', 'application/json');
-        $I->sendGET('/user/forgotten_password', [
+        $I->sendGET('/user/forgotten-password', [
             'email' => 'user@example.com',
         ]);
 
@@ -87,7 +87,7 @@ class ResetPasswordCest
         $I->seeInRepository(User::class, ['sentForgottenPassword' => $sentForgottenPasswordEmail]);
 
         $I->haveHttpHeader('Content-Type', 'application/json');
-        $I->sendPOST('/user/reset_password/' . $user->getForgottenPasswordToken(), [
+        $I->sendPOST('/user/reset-password/' . $user->getForgottenPasswordToken(), [
             'newPassword'             => 'Password2',
             'newPasswordConfirmation' => 'Password2'
         ]);
@@ -112,7 +112,7 @@ class ResetPasswordCest
         ]);
 
         $I->haveHttpHeader('Content-Type', 'application/json');
-        $I->sendGET('/user/forgotten_password', [
+        $I->sendGET('/user/forgotten-password', [
             'email' => 'user@example.com',
         ]);
 
@@ -120,7 +120,7 @@ class ResetPasswordCest
         $user = $I->grabEntityFromRepository(User::class, array('email' => 'user@example.com'));
 
         $I->haveHttpHeader('Content-Type', 'application/json');
-        $I->sendPOST('/user/reset_password/' . $user->getForgottenPasswordToken(), [
+        $I->sendPOST('/user/reset-password/' . $user->getForgottenPasswordToken(), [
             'newPassword'             => 'Password2',
             'newPasswordConfirmation' => 'password'
         ]);

@@ -21,7 +21,7 @@ class CloseAccountCest
         $I->seeResponseCodeIs(\Codeception\Util\HttpCode::NO_CONTENT);
 
         $I->haveHttpHeader('Content-Type', 'application/json');
-        $I->sendPATCH('/user/close_account');
+        $I->sendPATCH('/user/close-account');
         $I->seeResponseCodeIs(\Codeception\Util\HttpCode::OK);
         $I->seeResponseIsJson();
         $I->seeResponseContains('{"success":"You\u0027ve been logged out."}');
@@ -33,7 +33,7 @@ class CloseAccountCest
     public function closeAccountOnNotSessionExistTest(ApiTester $I)
     {
         $I->haveHttpHeader('Content-Type', 'application/json');
-        $I->sendPATCH('/user/close_account');
+        $I->sendPATCH('/user/close-account');
         $I->seeResponseCodeIs(\Codeception\Util\HttpCode::UNAUTHORIZED);
         $I->seeResponseIsJson();
         $I->seeResponseContains('{"message":"Authentication Required"}');

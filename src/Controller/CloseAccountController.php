@@ -13,7 +13,7 @@ use Symfony\Component\Security\Core\Security;
 class CloseAccountController extends AbstractController
 {
     /**
-     * @Route("/api/v1/user/close_account", name="close_account", methods={"PATCH"})
+     * @Route("/api/v1/user/close-account", name="close_account", methods={"PATCH"})
      *
      * @IsGranted("ROLE_USER")
      */

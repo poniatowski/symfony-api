@@ -24,7 +24,7 @@ class UserDetailsCest
     public function addExtraUserDetailsOnSuccessTest(ApiTester $I)
     {
         $I->haveHttpHeader('Content-Type', 'application/json');
-        $I->sendPATCH('/user/extra_details', [
+        $I->sendPATCH('/user/extra-details', [
             'firstname' => 'Firstname',
             'surname'   => 'Surname',
         ]);
@@ -42,7 +42,7 @@ class UserDetailsCest
     public function addExtraUserDetailsOnInvalidFirstnameTest(ApiTester $I)
     {
         $I->haveHttpHeader('Content-Type', 'application/json');
-        $I->sendPATCH('/user/extra_details', [
+        $I->sendPATCH('/user/extra-details', [
             'firstname' => 'a',
             'surname'   => 'Surname',
         ]);
@@ -54,7 +54,7 @@ class UserDetailsCest
     public function addExtraUserDetailsOnInvalidSurnameTest(ApiTester $I)
     {
         $I->haveHttpHeader('Content-Type', 'application/json');
-        $I->sendPATCH('/user/extra_details', [
+        $I->sendPATCH('/user/extra-details', [
             'firstname' => 'Firstname',
             'surname'   => 'a',
         ]);
@@ -66,7 +66,7 @@ class UserDetailsCest
     public function addExtraUserDetailsOnMissingFieldTest(ApiTester $I)
     {
         $I->haveHttpHeader('Content-Type', 'application/json');
-        $I->sendPATCH('/user/extra_details', [
+        $I->sendPATCH('/user/extra-details', [
             'firstname' => 'Firstname',
         ]);
         $I->seeResponseCodeIs(\Codeception\Util\HttpCode::BAD_REQUEST);

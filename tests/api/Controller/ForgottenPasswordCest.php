@@ -22,7 +22,7 @@ class ForgottenPasswordCest
 
 
         $I->haveHttpHeader('Content-Type', 'application/json');
-        $I->sendGET('/user/forgotten_password', [
+        $I->sendPOST('/user/forgotten-password', [
             'email' => 'user@example.com',
         ]);
         $I->seeEmailIsSent(1);
@@ -41,9 +41,10 @@ class ForgottenPasswordCest
     public function notRecogniseUserTest(ApiTester $I)
     {
         $I->haveHttpHeader('Content-Type', 'application/json');
-        $I->sendGET('/user/forgotten_password', [
+        $I->sendPOST('/user/forgotten-password', [
             'email' => 'user@example.com',
         ]);
+
         $I->seeResponseCodeIs(\Codeception\Util\HttpCode::BAD_REQUEST);
         $I->seeResponseIsJson();
         $I->seeResponseContains('{"error":"The email address (user@example.com) has not been recognised."}');
@@ -52,12 +53,12 @@ class ForgottenPasswordCest
     public function onInvalidEmailAddressTest(ApiTester $I)
     {
         $I->haveHttpHeader('Content-Type', 'application/json');
-        $I->sendGET('/user/forgotten_password', [
+        $I->sendPOST('/user/forgotten-password', [
             'email' => 'userexample.com',
         ]);
         $I->seeResponseCodeIs(\Codeception\Util\HttpCode::BAD_REQUEST);
         $I->seeResponseIsJson();
-        $I->seeResponseContains('{"error":{"email":"This value is not a valid email address."}}');
+        $I->seeResponseContains('{"email":["This value is not a valid email address."]}');
     }
 
     public function onClosedAccountTest(ApiTester $I)
@@ -77,12 +78,12 @@ class ForgottenPasswordCest
         $I->seeResponseCodeIs(\Codeception\Util\HttpCode::NO_CONTENT);
 
         $I->haveHttpHeader('Content-Type', 'application/json');
-        $I->sendPATCH('/user/close_account');
+        $I->sendPATCH('/user/close-account');
         $I->seeResponseCodeIs(\Codeception\Util\HttpCode::OK);
 
 
         $I->haveHttpHeader('Content-Type', 'application/json');
-        $I->sendGET('/user/forgotten_password', [
+        $I->sendPOST('/user/forgotten-password', [
             'email' => 'user@example.com',
         ]);
         $I->seeResponseCodeIs(\Codeception\Util\HttpCode::BAD_REQUEST);

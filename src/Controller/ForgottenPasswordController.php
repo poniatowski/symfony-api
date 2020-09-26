@@ -18,7 +18,7 @@ use Throwable;
 class ForgottenPasswordController extends AbstractController
 {
     /**
-     * @Route("/api/v1/user/forgotten_password", name="forgotten_password", methods={"POST"})
+     * @Route("/api/v1/user/forgotten-password", name="forgotten_password", methods={"POST"})
      */
     public function __invoke(
         ForgottenPassword $forgottenPasswordDTO,

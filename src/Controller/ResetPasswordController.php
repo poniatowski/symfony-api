@@ -15,7 +15,7 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 class ResetPasswordController
 {
     /**
-     * @Route("/api/v1/user/reset_password/{token}", name="reset_password", methods={"POST"})
+     * @Route("/api/v1/user/reset-password/{token}", name="reset_password", methods={"POST"})
      */
     public function __invoke(
         string $token,
