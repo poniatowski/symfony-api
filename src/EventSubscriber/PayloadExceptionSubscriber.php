@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 
-class PayloadExceptionSubscriber implements EventSubscriberInterface
+final class PayloadExceptionSubscriber implements EventSubscriberInterface
 {
     private function normalizeViolations(ConstraintViolationListInterface $violations): ?array
     {

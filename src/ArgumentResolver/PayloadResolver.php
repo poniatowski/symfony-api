@@ -13,7 +13,7 @@ use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Throwable;
 
-class PayloadResolver implements ArgumentValueResolverInterface
+final class PayloadResolver implements ArgumentValueResolverInterface
 {
     private SerializerInterface $serializer;
 
