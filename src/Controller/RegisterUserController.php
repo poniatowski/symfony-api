@@ -26,7 +26,7 @@ class RegisterUserController extends AbstractController
             $registerUserHandler->saveUser($userDTO);
         } catch (Throwable $e) {
             $logger->critical("User wasn't saved.", [
-                'exception' => $e,
+                'exception' => $e->getMessage(),
                 'email'     => $userDTO->email
             ]);
 

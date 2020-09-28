@@ -38,7 +38,7 @@ class UserDetailsController extends AbstractController
             $userRepository->saveUser($user);
         } catch (Throwable $e) {
             $logger->critical("We can't update user.", [
-                'exception' => $e,
+                'exception' => $e->getMessage(),
                 'email'     => $user->getUsername()
             ]);
             return new JsonResponse(['error' => $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
