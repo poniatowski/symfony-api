@@ -4,6 +4,4 @@ namespace App\Exception;
 
 interface ApiExceptionInterface
 {
-    public function getMessage(): string;
-    public function getCode(): int;
 }
