@@ -1,9 +1,8 @@
 <?php declare(strict_types = 1);
 
-namespace App\Controller;
+namespace App\Controller\User;
 
-use App\Repository\UserRepository;
-use DateTime;
+use App\Handler\User\CloseAccountHandler;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,13 +16,12 @@ class CloseAccountController extends AbstractController
      *
      * @IsGranted("ROLE_USER")
      */
-    public function __invoke(Security $security, UserRepository $userRepository): Response
+    public function __invoke(
+        Security $security,
+        CloseAccountHandler $closeAccountHandler
+    ): Response
     {
-        $user = $security->getUser();
-
-        $user->setClosed(true);
-        $user->setClosedDate(new DateTime());
-        $userRepository->saveUser($user);
+        $closeAccountHandler->saveUser($security->getUser());
 
         return $this->redirect($this->generateUrl('app_logout'));
     }

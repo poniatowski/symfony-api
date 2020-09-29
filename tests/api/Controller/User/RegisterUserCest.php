@@ -1,4 +1,4 @@
-<?php namespace App\Tests\Controller;
+<?php namespace App\Tests\Controller\User;
 use App\Entity\User;
 use App\Tests\ApiTester;
 
@@ -14,7 +14,7 @@ class RegisterUserCest
         ]);
         $I->seeResponseCodeIs(\Codeception\Util\HttpCode::CREATED); // 201
         $I->seeResponseIsJson();
-        $I->seeResponseContains('{"status":"User registered!"}');
+        $I->seeResponseContains('{"success":"User registered!"}');
         $I->grabEntityFromRepository(User::class, ['email' => 'user@example.com']);
     }
 

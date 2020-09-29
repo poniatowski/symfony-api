@@ -1,9 +1,9 @@
 <?php declare(strict_types = 1);
 
-namespace App\Controller;
+namespace App\Controller\User;
 
 use App\DTO\User as UserDTO;
-use App\Handler\RegisterUserHandler;
+use App\Handler\User\RegisterUserHandler;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;

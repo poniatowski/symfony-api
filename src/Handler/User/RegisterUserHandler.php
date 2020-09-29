@@ -1,6 +1,6 @@
 <?php declare(strict_types = 1);
 
-namespace App\Handler;
+namespace App\Handler\User;
 
 use App\DTO\User as UserDTO;
 use App\Entity\User;
@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Throwable;
 
-class RegisterUserHandler
+final class RegisterUserHandler
 {
     private UserRepository $userRepository;
 

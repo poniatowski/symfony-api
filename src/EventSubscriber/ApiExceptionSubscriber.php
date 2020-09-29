@@ -19,7 +19,7 @@ final class ApiExceptionSubscriber implements EventSubscriberInterface
         }
 
         $event->setResponse(new JsonResponse(
-            $exception->getMessage(),
+            ['error' => $exception->getMessage()],
             $exception->getCode()
         ));
     }

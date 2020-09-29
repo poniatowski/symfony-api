@@ -1,4 +1,4 @@
-<?php namespace App\Tests\Controller;
+<?php namespace App\Tests\Controller\User;
 use App\Tests\ApiTester;
 
 class LoginCest

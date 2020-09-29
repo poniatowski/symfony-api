@@ -1,7 +1,7 @@
 <?php namespace App\Tests\src\Handler;
 
 use App\Exception\ApiException;
-use App\Handler\RegisterUserHandler;
+use App\Handler\User\RegisterUserHandler;
 use App\DTO\User as UserDTO;
 use App\Entity\User;
 use App\Tests\UnitTester;
