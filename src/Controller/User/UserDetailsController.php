@@ -9,7 +9,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Security;
 
 class UserDetailsController extends AbstractController
 {
@@ -20,11 +19,10 @@ class UserDetailsController extends AbstractController
      */
     public function __invoke(
         User $userDetailsDTO,
-        Security $security,
         UserDetailsHandler $userDetailsHandler
     ): Response
     {
-        $userDetailsHandler->saveUser($security->getUser(), $userDetailsDTO);
+        $userDetailsHandler->handle($userDetailsDTO);
 
         return new JsonResponse(
             [

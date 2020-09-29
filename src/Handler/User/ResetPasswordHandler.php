@@ -4,6 +4,7 @@ namespace App\Handler\User;
 
 use App\Entity\User;
 use App\Exception\ApiException;
+use App\Handler\HandlerInterface;
 use App\Repository\UserRepository;
 use DateInterval;
 use DateTimeImmutable;
@@ -11,7 +12,7 @@ use DateTimeInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
-final class ResetPasswordHandler
+final class ResetPasswordHandler implements HandlerInterface
 {
     private UserRepository $userRepository;
 
@@ -72,12 +73,12 @@ final class ResetPasswordHandler
         return $user;
     }
 
-    public function resetPassword(string $token, string $newPassword): User
+    public function handle(object $command): User
     {
-        $user = $this->findUserByPasswordToken($token);
+        $user = $this->findUserByPasswordToken($command->token);
 
         $this->isTokenExpired($user->getSentForgottenPassword());
-        $this->upgradePassword($user, $newPassword);
+        $this->upgradePassword($user, $command->password);
         $this->saveUser($user);
 
         return $user;

@@ -5,31 +5,39 @@ namespace App\Handler\User;
 use App\DTO\User as UserDTO;
 use App\Entity\User;
 use App\Exception\ApiException;
+use App\Handler\HandlerInterface;
 use App\Repository\UserRepository;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Security;
 use Throwable;
 
-final class UserDetailsHandler
+final class UserDetailsHandler implements HandlerInterface
 {
     private UserRepository $userRepository;
+
+    private Security $security;
 
     private LoggerInterface $logger;
 
     public function __construct(
         UserRepository $userRepository,
+        Security $security,
         LoggerInterface $logger
     )
     {
         $this->userRepository = $userRepository;
+        $this->security       = $security;
         $this->logger         = $logger;
     }
 
-    public function saveUser(User $user, UserDTO $userDetailsDTO): User
+    public function handle(Object $command): User
     {
         try {
-            $user->setFirstName(ucwords($userDetailsDTO->firstname));
-            $user->setSurname(ucwords($userDetailsDTO->surname));
+            $user = $this->security->getUser();
+
+            $user->setFirstName(ucwords($command->firstname));
+            $user->setSurname(ucwords($command->surname));
             $this->userRepository->saveUser($user);
         } catch (Throwable $e) {
             $this->logger->critical("User details can't be updated.", [

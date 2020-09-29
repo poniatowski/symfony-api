@@ -21,7 +21,7 @@ class CloseAccountController extends AbstractController
         CloseAccountHandler $closeAccountHandler
     ): Response
     {
-        $closeAccountHandler->saveUser($security->getUser());
+        $closeAccountHandler->handle($security->getUser());
 
         return $this->redirect($this->generateUrl('app_logout'));
     }

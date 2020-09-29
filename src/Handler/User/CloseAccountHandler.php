@@ -3,10 +3,11 @@
 namespace App\Handler\User;
 
 use App\Entity\User;
+use App\Handler\HandlerInterface;
 use App\Repository\UserRepository;
 use DateTimeImmutable;
 
-final class CloseAccountHandler
+final class CloseAccountHandler implements HandlerInterface
 {
     private UserRepository $userRepository;
 
@@ -15,12 +16,12 @@ final class CloseAccountHandler
         $this->userRepository = $userRepository;
     }
 
-    public function saveUser(User $user): User
+    public function handle(Object $command): User
     {
-        $user->setClosed(true);
-        $user->setClosedDate(new DateTimeImmutable());
-        $this->userRepository->saveUser($user);
+        $command->setClosed(true);
+        $command->setClosedDate(new DateTimeImmutable());
+        $this->userRepository->saveUser($command);
 
-        return $user;
+        return $command;
     }
 }

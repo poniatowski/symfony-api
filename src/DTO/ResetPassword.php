@@ -38,6 +38,8 @@ final class ResetPassword implements PayloadInterface
      */
     public $passwordConfirmation;
 
+    public $token;
+
     /**
      * @Assert\IsTrue(message="Password does not match the password confirmation.", groups={"create"})
      */

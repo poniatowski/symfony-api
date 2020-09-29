@@ -5,6 +5,7 @@ namespace App\Handler\User;
 use App\DTO\User as UserDTO;
 use App\Entity\User;
 use App\Exception\ApiException;
+use App\Handler\HandlerInterface;
 use App\Repository\UserRepository;
 use DateTime;
 use Psr\Log\LoggerInterface;
@@ -12,7 +13,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Throwable;
 
-final class RegisterUserHandler
+final class RegisterUserHandler implements HandlerInterface
 {
     private UserRepository $userRepository;
 
@@ -45,16 +46,16 @@ final class RegisterUserHandler
         return $user;
     }
 
-    public function saveUser(UserDTO $userDTO): User
+    public function handle(Object $command): User
     {
         try {
-            $user = $this->createUserFromUserDto($userDTO);
+            $user = $this->createUserFromUserDto($command);
 
             return $this->userRepository->saveUser($user);
         } catch (Throwable $e) {
             $this->logger->critical("Unable to register user. Please, try again.", [
                 'exception' => $e->getMessage(),
-                'email'     => $userDTO->email
+                'email'     => $command->email
             ]);
 
             throw new ApiException(

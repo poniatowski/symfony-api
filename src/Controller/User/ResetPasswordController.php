@@ -19,7 +19,8 @@ class ResetPasswordController
         ResetPasswordHandler $resetPasswordHandler
     ): Response
     {
-        $resetPasswordHandler->resetPassword($token, $resetPasswordDTO->password);
+        $resetPasswordDTO->token = $token;
+        $resetPasswordHandler->handle($resetPasswordDTO);
 
         return new JsonResponse(
             [

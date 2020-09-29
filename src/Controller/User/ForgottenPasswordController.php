@@ -19,7 +19,7 @@ class ForgottenPasswordController extends AbstractController
         ForgottenPasswordHandler $forgottenPasswordHandler
     ): Response
     {
-        $forgottenPasswordHandler->processForgottenPassword($forgottenPasswordDTO->email);
+        $forgottenPasswordHandler->handle($forgottenPasswordDTO);
 
         return new JsonResponse(
             [

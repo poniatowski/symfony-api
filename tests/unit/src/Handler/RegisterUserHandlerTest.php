@@ -58,7 +58,7 @@ class RegisterUserHandlerTest extends Unit
         $userDTO->password             = 'Password098';
 
         $userHandler = new RegisterUserHandler($userRepositoryMock, $passwordEncoderMock, $loggerMock);
-        $newUser = $userHandler->saveUser($userDTO);
+        $newUser = $userHandler->handle($userDTO);
 
         $this->assertSame('hashed_password', $newUser->getPassword());
         $this->assertSame('user@domain.co.uk', $newUser->getEmail());
@@ -87,6 +87,6 @@ class RegisterUserHandlerTest extends Unit
 
         $this->expectException(ApiException::class);
         $userHandler = new RegisterUserHandler($userRepositoryMock, $passwordEncoderMock, $loggerMock);
-        $userHandler->saveUser($userDTO);
+        $userHandler->handle($userDTO);
     }
 }

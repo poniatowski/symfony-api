@@ -16,7 +16,7 @@ class RegisterUserController extends AbstractController
      */
     public function __invoke(UserDTO $userDTO, RegisterUserHandler $registerUserHandler): Response
     {
-        $registerUserHandler->saveUser($userDTO);
+        $registerUserHandler->handle($userDTO);
 
         return new JsonResponse(
             ['success' => 'User registered!'],

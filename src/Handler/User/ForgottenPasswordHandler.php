@@ -4,6 +4,7 @@ namespace App\Handler\User;
 
 use App\Entity\User;
 use App\Exception\ApiException;
+use App\Handler\HandlerInterface;
 use App\Repository\UserRepository;
 use App\Service\MailerService;
 use App\Util\TokenUtil;
@@ -13,7 +14,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouterInterface;
 use Throwable;
 
-final class ForgottenPasswordHandler
+final class ForgottenPasswordHandler implements HandlerInterface
 {
     private UserRepository $userRepository;
 
@@ -96,14 +97,15 @@ final class ForgottenPasswordHandler
         return $user;
     }
 
-    public function processForgottenPassword(string $email): void
+    public function handle(Object $command): User
     {
-        $user = $this->findUserByEmailAddress($email);
+        $user = $this->findUserByEmailAddress($command->email);
 
         $token = TokenUtil::generate();
 
-        $this->sendForgottenPassword($email, $token);
-
+        $this->sendForgottenPassword($command->email, $token);
         $this->saveUser($user, $token);
+
+        return $user;
     }
 }
