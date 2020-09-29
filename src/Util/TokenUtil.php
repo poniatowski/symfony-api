@@ -4,7 +4,7 @@ namespace App\Util;
 
 class TokenUtil
 {
-    public static function generate(int $length = 20): string
+    public function generate(int $length = 20): string
     {
         return bin2hex(random_bytes($length));
     }

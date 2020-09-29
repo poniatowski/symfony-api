@@ -20,6 +20,8 @@ final class ForgottenPasswordHandler implements HandlerInterface
 
     private MailerService $mailerService;
 
+    private TokenUtil $tokenUtil;
+
     private RouterInterface $router;
 
     private LoggerInterface $logger;
@@ -27,12 +29,14 @@ final class ForgottenPasswordHandler implements HandlerInterface
     public function __construct(
         UserRepository $userRepository,
         MailerService $mailerService,
+        TokenUtil $tokenUtil,
         RouterInterface $router,
         LoggerInterface $logger
     )
     {
         $this->userRepository = $userRepository;
         $this->mailerService  = $mailerService;
+        $this->tokenUtil      = $tokenUtil;
         $this->router         = $router;
         $this->logger         = $logger;
     }
@@ -58,7 +62,7 @@ final class ForgottenPasswordHandler implements HandlerInterface
         return $user;
     }
 
-    protected function generateResetPasswordLink(string $token):string
+    protected function generateResetPasswordLink(string $token): string
     {
         return $this->router->generate(
             'reset_password',
@@ -101,7 +105,7 @@ final class ForgottenPasswordHandler implements HandlerInterface
     {
         $user = $this->findUserByEmailAddress($command->email);
 
-        $token = TokenUtil::generate();
+        $token = $this->tokenUtil->generate();
 
         $this->sendForgottenPassword($command->email, $token);
         $this->saveUser($user, $token);

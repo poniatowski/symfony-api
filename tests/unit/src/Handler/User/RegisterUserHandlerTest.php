@@ -1,10 +1,9 @@
-<?php namespace App\Tests\src\Handler;
+<?php namespace App\Tests\src\User\Handler;
 
 use App\Exception\ApiException;
 use App\Handler\User\RegisterUserHandler;
 use App\DTO\User as UserDTO;
 use App\Entity\User;
-use App\Tests\UnitTester;
 use App\Repository\UserRepository;
 use Codeception\Test\Unit;
 use Psr\Log\LoggerInterface;
@@ -12,8 +11,6 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class RegisterUserHandlerTest extends Unit
 {
-    protected UnitTester $tester;
-
     public function testCreateUserFromUserDtoOnSuccess(): void
     {
         $userRepositoryMock  = $this->createMock(UserRepository::class);
@@ -25,7 +22,7 @@ class RegisterUserHandlerTest extends Unit
             ->willReturn('hashed_password');
 
 
-        $userDTO = new UserDTO();
+        $userDTO                       = new UserDTO();
         $userDTO->email                = 'user@domain.co.uk';
         $userDTO->password             = 'Password098';
         $userDTO->passwordConfirmation = 'Password098';
@@ -53,9 +50,9 @@ class RegisterUserHandlerTest extends Unit
             ->willReturn($user);
 
 
-        $userDTO = new UserDTO();
-        $userDTO->email                = 'user@domain.co.uk';
-        $userDTO->password             = 'Password098';
+        $userDTO           = new UserDTO();
+        $userDTO->email    = 'user@domain.co.uk';
+        $userDTO->password = 'Password098';
 
         $userHandler = new RegisterUserHandler($userRepositoryMock, $passwordEncoderMock, $loggerMock);
         $newUser = $userHandler->handle($userDTO);
@@ -78,9 +75,9 @@ class RegisterUserHandlerTest extends Unit
         $user->setPassword('hashed_password');
         $user->setEmail('user@domain.co.uk');
 
-        $userDTO = new UserDTO();
-        $userDTO->email                = 'user@domain.co.uk';
-        $userDTO->password             = 'Password098';
+        $userDTO           = new UserDTO();
+        $userDTO->email    = 'user@domain.co.uk';
+        $userDTO->password = 'Password098';
 
         $this->expectNotice();
         $this->expectNoticeMessage('Unable to register user. Please, try again.');
