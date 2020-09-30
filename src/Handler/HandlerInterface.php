@@ -2,7 +2,9 @@
 
 namespace App\Handler;
 
+use App\Util\CommandInterface as Command;
+
 interface HandlerInterface
 {
-    public function handle(Object $command);
+    public function handle(Command $command);
 }

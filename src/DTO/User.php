@@ -2,11 +2,12 @@
 
 namespace App\DTO;
 
+use App\Util\CommandInterface as Command;
 use App\Util\PayloadInterface;
 use App\Validator\Constraints as AppAssert;
 use Symfony\Component\Validator\Constraints as Assert;
 
-final class User implements PayloadInterface
+final class User implements PayloadInterface, Command
 {
     public $id;
 
@@ -58,26 +59,4 @@ final class User implements PayloadInterface
     {
         return ($this->password === $this->passwordConfirmation);
     }
-
-    /**
-     * @Assert\Sequentially({
-     *     @Assert\NotBlank(),
-     *     @Assert\Length(
-     *          min = 3,
-     *          max = 255
-     *      )
-     * }, groups={"edit"})
-     */
-    public $firstname;
-
-    /**
-     * @Assert\Sequentially({
-     *     @Assert\NotBlank(),
-     *     @Assert\Length(
-     *          min = 3,
-     *          max = 255
-     *      )
-     * }, groups={"edit"})
-     */
-    public $surname;
 }

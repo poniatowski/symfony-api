@@ -2,8 +2,8 @@
 
 namespace App\Controller\User;
 
+use App\CommandBus;
 use App\DTO\ForgottenPassword;
-use App\Handler\User\ForgottenPasswordHandler;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,10 +16,10 @@ class ForgottenPasswordController extends AbstractController
      */
     public function __invoke(
         ForgottenPassword $forgottenPasswordDTO,
-        ForgottenPasswordHandler $forgottenPasswordHandler
+        CommandBus $commandBus
     ): Response
     {
-        $forgottenPasswordHandler->handle($forgottenPasswordDTO);
+        $commandBus->execute($forgottenPasswordDTO);
 
         return new JsonResponse(
             [

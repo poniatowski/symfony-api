@@ -2,12 +2,12 @@
 
 namespace App\Controller\User;
 
-use App\Handler\User\CloseAccountHandler;
+use App\CommandBus;
+use App\DTO\CloseAccount;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Security;
 
 class CloseAccountController extends AbstractController
 {
@@ -17,11 +17,10 @@ class CloseAccountController extends AbstractController
      * @IsGranted("ROLE_USER")
      */
     public function __invoke(
-        Security $security,
-        CloseAccountHandler $closeAccountHandler
+        CommandBus $commandBus
     ): Response
     {
-        $closeAccountHandler->handle($security->getUser());
+        $commandBus->execute(new CloseAccount());
 
         return $this->redirect($this->generateUrl('app_logout'));
     }

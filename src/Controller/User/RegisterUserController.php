@@ -2,8 +2,8 @@
 
 namespace App\Controller\User;
 
+use App\CommandBus;
 use App\DTO\User as UserDTO;
-use App\Handler\User\RegisterUserHandler;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -14,9 +14,9 @@ class RegisterUserController extends AbstractController
     /**
      * @Route("/api/v1/register/user", name="register_user", methods={"POST"})
      */
-    public function __invoke(UserDTO $userDTO, RegisterUserHandler $registerUserHandler): Response
+    public function __invoke(UserDTO $userDTO, CommandBus $commandBus): Response
     {
-        $registerUserHandler->handle($userDTO);
+        $commandBus->execute($userDTO);
 
         return new JsonResponse(
             ['success' => 'User registered!'],

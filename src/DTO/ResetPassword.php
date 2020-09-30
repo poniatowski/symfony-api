@@ -2,10 +2,11 @@
 
 namespace App\DTO;
 
+use App\Util\CommandInterface as Command;
 use App\Util\PayloadInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
-final class ResetPassword implements PayloadInterface
+final class ResetPassword implements PayloadInterface, Command
 {
     /**
      * @Assert\Sequentially({

@@ -6,22 +6,28 @@ use App\Entity\User;
 use App\Handler\HandlerInterface;
 use App\Repository\UserRepository;
 use DateTimeImmutable;
+use Symfony\Component\Security\Core\Security;
 
 final class CloseAccountHandler implements HandlerInterface
 {
     private UserRepository $userRepository;
 
-    public function __construct(UserRepository $userRepository)
+    private Security $security;
+
+    public function __construct(UserRepository $userRepository, Security $security)
     {
         $this->userRepository = $userRepository;
+        $this->security       = $security;
     }
 
     public function handle(Object $command): User
     {
-        $command->setClosed(true);
-        $command->setClosedDate(new DateTimeImmutable());
-        $this->userRepository->saveUser($command);
+        $user = $this->security->getUser();
 
-        return $command;
+        $user->setClosed(true);
+        $user->setClosedDate(new DateTimeImmutable());
+        $this->userRepository->saveUser($user);
+
+        return $user;
     }
 }

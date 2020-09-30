@@ -2,8 +2,8 @@
 
 namespace App\Controller\User;
 
-use App\DTO\User;
-use App\Handler\User\UserDetailsHandler;
+use App\CommandBus;
+use App\DTO\UserDetails;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,11 +18,11 @@ class UserDetailsController extends AbstractController
      * @IsGranted("ROLE_USER")
      */
     public function __invoke(
-        User $userDetailsDTO,
-        UserDetailsHandler $userDetailsHandler
+        UserDetails $userDetailsDTO,
+        CommandBus $commandBus
     ): Response
     {
-        $userDetailsHandler->handle($userDetailsDTO);
+        $commandBus->execute($userDetailsDTO);
 
         return new JsonResponse(
             [

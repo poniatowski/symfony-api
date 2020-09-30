@@ -2,7 +2,7 @@
 
 namespace App\Controller\User;
 
-use App\Handler\User\ResetPasswordHandler;
+use App\CommandBus;
 use App\DTO\ResetPassword as ResetPasswordDTO;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,11 +16,11 @@ class ResetPasswordController
     public function __invoke(
         string $token,
         ResetPasswordDTO $resetPasswordDTO,
-        ResetPasswordHandler $resetPasswordHandler
+        CommandBus $commandBus
     ): Response
     {
         $resetPasswordDTO->token = $token;
-        $resetPasswordHandler->handle($resetPasswordDTO);
+        $commandBus->execute($resetPasswordDTO);
 
         return new JsonResponse(
             [
