@@ -2,7 +2,7 @@
 
 namespace App\Controller\User;
 
-use App\CommandBus;
+use App\CommandBus\CommandBus;
 use App\DTO\ResetPassword as ResetPasswordDTO;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;

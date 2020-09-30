@@ -5,7 +5,7 @@ namespace App\Handler\User;
 use App\DTO\User as UserDTO;
 use App\Entity\User;
 use App\Exception\ApiException;
-use App\Handler\HandlerInterface;
+use App\CommandBus\HandlerInterface;
 use App\Repository\UserRepository;
 use DateTime;
 use Psr\Log\LoggerInterface;

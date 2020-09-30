@@ -4,7 +4,7 @@ namespace App\Handler\User;
 
 use App\Entity\User;
 use App\Exception\ApiException;
-use App\Handler\HandlerInterface;
+use App\CommandBus\HandlerInterface;
 use App\Repository\UserRepository;
 use DateInterval;
 use DateTimeImmutable;

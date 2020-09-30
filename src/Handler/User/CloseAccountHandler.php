@@ -3,7 +3,7 @@
 namespace App\Handler\User;
 
 use App\Entity\User;
-use App\Handler\HandlerInterface;
+use App\CommandBus\HandlerInterface;
 use App\Repository\UserRepository;
 use DateTimeImmutable;
 use Symfony\Component\Security\Core\Security;

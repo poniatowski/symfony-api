@@ -2,7 +2,7 @@
 
 namespace App\Controller\User;
 
-use App\CommandBus;
+use App\CommandBus\CommandBus;
 use App\DTO\ForgottenPassword;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;

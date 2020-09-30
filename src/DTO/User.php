@@ -2,7 +2,7 @@
 
 namespace App\DTO;
 
-use App\Util\CommandInterface as Command;
+use App\CommandBus\CommandInterface as Command;
 use App\Util\PayloadInterface;
 use App\Validator\Constraints as AppAssert;
 use Symfony\Component\Validator\Constraints as Assert;

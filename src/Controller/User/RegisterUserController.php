@@ -2,7 +2,7 @@
 
 namespace App\Controller\User;
 
-use App\CommandBus;
+use App\CommandBus\CommandBus;
 use App\DTO\User as UserDTO;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;

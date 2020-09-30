@@ -2,7 +2,7 @@
 
 namespace App\Controller\User;
 
-use App\CommandBus;
+use App\CommandBus\CommandBus;
 use App\DTO\CloseAccount;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;

@@ -1,6 +1,6 @@
 <?php declare(strict_types = 1);
 
-namespace App;
+namespace App\CommandBus;
 
 use App\DTO\ForgottenPassword;
 use App\DTO\ResetPassword;
@@ -11,7 +11,7 @@ use App\Handler\User\ForgottenPasswordHandler;
 use App\Handler\User\RegisterUserHandler;
 use App\Handler\User\ResetPasswordHandler;
 use App\Handler\User\UserDetailsHandler;
-use App\Util\CommandInterface as Command;
+use App\CommandBus\CommandInterface as Command;
 use Psr\Container\ContainerInterface;
 use Symfony\Contracts\Service\ServiceSubscriberInterface;
 use App\DTO\CloseAccount;
