@@ -1,4 +1,4 @@
-version: "3.1"
+version: "3.2"
 services:
 
   postgres:
@@ -15,6 +15,24 @@ services:
     ports:
       - "5432:5432"
 
+  php-fpm:
+    build: docker/dev/php-fpm
+    environment:
+      - PHP_IDE_CONFIG=serverName=API
+      - COMPOSE_PROJECT_NAME=symfony-api
+    container_name: api-php-fpm
+    working_dir: /application
+    volumes:
+      - .:/application:delegated
+      - ./docker/dev/php-fpm/php-ini-overrides.ini:/etc/php/7.4/fpm/conf.d/99-overrides.ini
+
+  composer-installation:
+    container_name: api-composer-installation
+    image: composer
+    volumes:
+      - ./:/application
+    command: composer install --ignore-platform-reqs
+
   webserver:
     image: nginx:alpine
     container_name: api-webserver
@@ -29,17 +47,6 @@ services:
         - ./docker/dev/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
     ports:
      - "8080:80"
-
-  php-fpm:
-    build: docker/dev/php-fpm
-    environment:
-      - PHP_IDE_CONFIG=serverName=API
-      - COMPOSE_PROJECT_NAME=symfony-api
-    container_name: api-php-fpm
-    working_dir: /application
-    volumes:
-      - .:/application:delegated
-      - ./docker/dev/php-fpm/php-ini-overrides.ini:/etc/php/7.4/fpm/conf.d/99-overrides.ini
 
   mailhog:
     environment:
